@@ -14,6 +14,11 @@ import java.io.InputStream;
 @Controller
 public class MainController {
 
+    @GetMapping("test")
+    public String testSite() {
+        return "test";
+    }
+
     @GetMapping("/")
     public String mainSite() {
         return "index";
