@@ -2,9 +2,6 @@ package com.siedlecki.mateusz.gacek.controller;
 
 import com.siedlecki.mateusz.gacek.core.FileGeneratorService;
 import com.siedlecki.mateusz.gacek.core.XlsxFileWriter;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -19,9 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Optional;
 
 @Controller
@@ -34,42 +29,73 @@ public class MainController {
         this.service = service;
     }
 
-    @GetMapping("test")
-    public String testSite() {
-        return "test";
-    }
-
     @GetMapping("/")
     public String mainSite() {
         return "index";
     }
 
-    @PostMapping("generate")
-    public ResponseEntity<?> generateExcelFile(@RequestAttribute("slm0003") MultipartFile slm0003, @RequestAttribute("prenot") MultipartFile prenot) {
+    @GetMapping("prenotification-form")
+    public String prenotForm() {
+        return "prenotification";
+    }
+
+    @GetMapping("morning-order-form")
+    public String morningOrderForm() {
+        return "morning_order";
+    }
+
+    @PostMapping("generate-prenot-file")
+    public ResponseEntity<?> generatePrenotFile(
+            @RequestAttribute("slm0003") MultipartFile slm0003,
+            @RequestAttribute("prenot") MultipartFile prenot) {
         try {
-        XlsxFileWriter result = null;
+            XlsxFileWriter result = null;
 
-        if (!slm0003.isEmpty() && !prenot.isEmpty()) {
-            result = service.prenotProcess(slm0003, prenot, false);
-        } else {
-            System.err.println("Jeden z plików lub wszystkie nie zostały znalezione");
-        }
-        if (result != null && result.getWorkbook()!=null) {
-
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                HttpHeaders header = new HttpHeaders();
-                header.setContentType(new MediaType("application", "force-download"));
-                header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+result.getFileName());
-                result.getWorkbook().write(outputStream);
-                result.getWorkbook().close();
-                return new ResponseEntity<>(new ByteArrayResource(outputStream.toByteArray()),
-                        header, HttpStatus.CREATED);
+            if (!slm0003.isEmpty() && !prenot.isEmpty()) {
+                result = service.prenotProcess(slm0003, prenot, false);
+            } else {
+                System.err.println("Nie dodano wymaganych plików. Spróbuj ponownie");
             }
-        }catch (Exception e) {
+            if (result != null && result.getWorkbook() != null) {
+                return sendReadyFile(result);
+            }
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             return ResponseEntity.of(Optional.of(e.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @PostMapping("generate-morning-file")
+    public ResponseEntity<?> generateMorningFile(
+            @RequestAttribute("slm0003") MultipartFile slm0003) {
+        try {
+            XlsxFileWriter result = null;
+
+            if (!slm0003.isEmpty()) {
+                result = service.morningOrderPorocess(slm0003, false);
+            } else {
+                System.err.println("Nie dodano wymaganego pliku. Spróbuj ponownie");
+            }
+            if (result != null && result.getWorkbook() != null) {
+                return sendReadyFile(result);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.of(Optional.of(e.getMessage()));
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    private ResponseEntity<ByteArrayResource> sendReadyFile(XlsxFileWriter result) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + result.getFileName());
+        result.getWorkbook().write(outputStream);
+        result.getWorkbook().close();
+        return new ResponseEntity<>(new ByteArrayResource(outputStream.toByteArray()),
+                header, HttpStatus.CREATED);
     }
 
 //    @GetMapping("download")

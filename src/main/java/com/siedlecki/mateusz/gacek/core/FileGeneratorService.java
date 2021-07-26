@@ -26,9 +26,7 @@ public class FileGeneratorService {
         SheetReader slm0003Reader = SheetReaderFactory.getSlm0003Reader();
         SheetReader prenotReader = SheetReaderFactory.getPrenotReader();
 
-        XlsxFileWriter writer = null;
-
-        writer = new XlsxFileWriter(fileName);
+        XlsxFileWriter writer = new XlsxFileWriter(fileName);
         Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
         Sheet prenotSheet = prenotReader.getSheetFromFile(prenotFile);
         List<IkeaProduct> ikeaProducts = Slm00003Mapper.mapToProductList(slm0003Sheet);
