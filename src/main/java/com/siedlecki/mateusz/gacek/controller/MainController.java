@@ -36,12 +36,17 @@ public class MainController {
 
     @GetMapping("prenotification-form")
     public String prenotForm() {
-        return "prenotification";
+        return "prenotification_form";
     }
 
     @GetMapping("morning-order-form")
     public String morningOrderForm() {
-        return "morning_order";
+        return "morning_order_form";
+    }
+
+    @GetMapping("morning-order-form-with-opq")
+    public String morningOrderWithOpqForm() {
+        return "morning_order_form_with_opq";
     }
 
     @PostMapping("generate-prenot-file")
@@ -73,7 +78,29 @@ public class MainController {
             XlsxFileWriter result = null;
 
             if (!slm0003.isEmpty()) {
-                result = service.morningOrderPorocess(slm0003, false);
+                result = service.morningOrderProcess(slm0003, false);
+            } else {
+                System.err.println("Nie dodano wymaganego pliku. Spróbuj ponownie");
+            }
+            if (result != null && result.getWorkbook() != null) {
+                return sendReadyFile(result);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.of(Optional.of(e.getMessage()));
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @PostMapping("generate-morning-file-with-opq")
+    public ResponseEntity<?> generateMorningFile(
+            @RequestAttribute("slm0003") MultipartFile slm0003,
+            @RequestAttribute("opq") MultipartFile opq) {
+        try {
+            XlsxFileWriter result = null;
+
+            if (!slm0003.isEmpty() && !opq.isEmpty()) {
+                result = service.morningOrderProcess(slm0003,opq, false);
             } else {
                 System.err.println("Nie dodano wymaganego pliku. Spróbuj ponownie");
             }
@@ -97,21 +124,4 @@ public class MainController {
         return new ResponseEntity<>(new ByteArrayResource(outputStream.toByteArray()),
                 header, HttpStatus.CREATED);
     }
-
-//    @GetMapping("download")
-//    public ResponseEntity<?> sendFile() {
-//
-//
-////        try {
-////            // get your file as InputStream
-////            InputStream is = new FileInputStream(System.getProperty("user.dir")+"\\ustawienie-stolow.xlsx");
-////            // copy it to response's OutputStream
-////            org.apache.commons.io.IOUtils.copy(is, response.getOutputStream());
-////            response.flushBuffer();
-////        } catch (IOException ex) {
-////            System.err.println("Error writing file to output stream. Filename was 'ustawienie-stolow.xlsx'\n"+ ex);
-////            throw new RuntimeException("IOError writing file to output stream");
-////        }
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//    }
 }

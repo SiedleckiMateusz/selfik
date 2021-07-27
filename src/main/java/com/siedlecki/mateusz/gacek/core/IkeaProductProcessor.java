@@ -4,11 +4,13 @@ import com.siedlecki.mateusz.gacek.core.model.IkeaProductToWrite;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.OrderType;
 import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class IkeaProductFilter {
+@Component
+public class IkeaProductProcessor {
 
     public Map<String, List<IkeaProductToWrite>> getProductsToPrepareAndExtraOrder(List<IkeaProduct> ikeaProducts, List<PrenotProduct> prenotProducts) {
 

@@ -19,21 +19,33 @@ import java.util.Map;
 
 @Service
 public class FileGeneratorService {
+    private SheetReader slm0003Reader;
+    private SheetReader prenotReader;
+    private SheetReader opqReader;
+    private final IkeaProductProcessor ikeaProductProcessor;
+
+    {
+        slm0003Reader = SheetReaderFactory.getSlm0003Reader();
+        prenotReader = SheetReaderFactory.getPrenotReader();
+        opqReader = SheetReaderFactory.getOpqReader();
+    }
+
+    public FileGeneratorService(IkeaProductProcessor ikeaProductProcessor) {
+        this.ikeaProductProcessor = ikeaProductProcessor;
+    }
 
     public XlsxFileWriter prenotProcess(MultipartFile slm0003File, MultipartFile prenotFile, boolean saveToStats) throws IOException {
-        String fileName = "Prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
 
-        SheetReader slm0003Reader = SheetReaderFactory.getSlm0003Reader();
-        SheetReader prenotReader = SheetReaderFactory.getPrenotReader();
-
-        XlsxFileWriter writer = new XlsxFileWriter(fileName);
         Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
         Sheet prenotSheet = prenotReader.getSheetFromFile(prenotFile);
         List<IkeaProduct> ikeaProducts = Slm00003Mapper.mapToProductList(slm0003Sheet);
         List<PrenotProduct> prenotProducts = PrenotMapper.mapToProductList(prenotSheet);
 
-        IkeaProductFilter ikeaProductFilter = new IkeaProductFilter();
-        Map<String, List<IkeaProductToWrite>> map = ikeaProductFilter.getProductsToPrepareAndExtraOrder(ikeaProducts, prenotProducts);
+        IkeaProductProcessor ikeaProductProcessor = new IkeaProductProcessor();
+        Map<String, List<IkeaProductToWrite>> map = ikeaProductProcessor.getProductsToPrepareAndExtraOrder(ikeaProducts, prenotProducts);
+
+        String fileName = "Prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+        XlsxFileWriter writer = new XlsxFileWriter(fileName);
         writer = writer.addSheet(map.get("toPrepare"), "Places to prepare")
                 .addSheet(map.get("toOrder"), "L23 extra order");
 
@@ -45,26 +57,41 @@ public class FileGeneratorService {
         return writer;
     }
 
-    public XlsxFileWriter morningOrderPorocess(MultipartFile slm0003File, boolean saveToStats) throws IOException {
-        String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
-        SheetReader slm0003Reader = SheetReaderFactory.getSlm0003Reader();
-
-        XlsxFileWriter writer = null;
-
-        writer = new XlsxFileWriter(fileName);
+    public XlsxFileWriter morningOrderProcess(MultipartFile slm0003File, boolean saveToStats) throws IOException {
         Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
         List<IkeaProduct> ikeaProducts = Slm00003Mapper.mapToProductList(slm0003Sheet);
 
-        IkeaProductFilter ikeaProductFilter = new IkeaProductFilter();
-        Map<String, List<IkeaProductToWrite>> map = ikeaProductFilter.getProductsToOrderAndPrepare(ikeaProducts);
+        Map<String, List<IkeaProductToWrite>> map = ikeaProductProcessor.getProductsToOrderAndPrepare(ikeaProducts);
 
-        writer = writer.addSheet(map.get("toOrder"), "L23 order")
-                .addSheet(map.get("toPrepareFromOrder"), "Place to prepare");
+        String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+        XlsxFileWriter writer = new XlsxFileWriter(fileName);
+        writer = writer.addSheet(map.get("toPrepareFromOrder"), "Places to prepare")
+                .addSheet(map.get("toOrder"), "L23 order");
+
 //            if (saveToStats){
 //                List<IkeaProduct> toOrder = map.get("toOrder").stream().map(IkeaFileProduct::getProduct).collect(Collectors.toList());
 //                saveOperationToStatistic(toOrder, OperationType.MORNING_ORDER);
 //            }
 
+        return writer;
+    }
+
+    public XlsxFileWriter morningOrderProcess(MultipartFile slm0003File, MultipartFile opqFile, boolean saveToStats) throws IOException {
+        Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
+        Sheet opqSheet = opqReader.getSheetFromFile(opqFile);
+        List<IkeaProduct> ikeaProducts = Slm00003Mapper.mapToProductList(slm0003Sheet);
+
+        Map<String, List<IkeaProductToWrite>> map = ikeaProductProcessor.getProductsToOrderAndPrepare(ikeaProducts);
+
+        String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+        XlsxFileWriter writer = new XlsxFileWriter(fileName);
+        writer = writer.addSheet(map.get("toPrepareFromOrder"), "Places to prepare")
+                .addSheet(map.get("toOrder"), "L23 order");
+
+//            if (saveToStats){
+//                List<IkeaProduct> toOrder = map.get("toOrder").stream().map(IkeaFileProduct::getProduct).collect(Collectors.toList());
+//                saveOperationToStatistic(toOrder, OperationType.MORNING_ORDER);
+//            }
 
         return writer;
     }

@@ -15,7 +15,7 @@ public class PrenotMapper {
     public static List<PrenotProduct> mapToProductList(Sheet sheet) {
         Map<String,PrenotProduct> productMap = new HashMap<>();
         int rows = sheet.getLastRowNum() - sheet.getFirstRowNum();
-        for (int i = rows; i > Constants.PRENOT_COLUMN_INDEX; i--) {
+        for (int i = rows; i > Constants.PRENOT_ROW_INDEX; i--) {
             Row row = sheet.getRow(i);
             PrenotProduct product = mapToProduct(row);
             if (productMap.containsKey(product.getNumberId())){

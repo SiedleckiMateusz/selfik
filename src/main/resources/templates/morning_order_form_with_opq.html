@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Proces poranny</title>
+</head>
+<body>
+<h1>Proces poranny</h1>
+<p class="error" style="color: red" th:if="${param.error}!= null">Nie znalazłem wszystkich wymaganych plików. Spróbuj
+    ponownie</p>
+
+<form action="/generate-morning-file-with-opq" method="post" enctype="multipart/form-data">
+    <label for="slm0003">Plik SLM0003:</label>
+    <input type="file"
+           id="slm0003" name="slm0003"
+           accept=".xls,.xlsx">
+
+    <br>
+    <label for="opq">Plik OPQ (Open pick quantity):</label>
+    <input type="file"
+           id="opq" name="opq"
+           accept=".xls,.xlsx">
+    <br>
+    <input type="submit" value="Generuj" name="submit">
+</form>
+</body>
+</html>

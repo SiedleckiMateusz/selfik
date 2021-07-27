@@ -43,7 +43,7 @@ public class Slm00003Mapper {
         List<LocationHelper> locations = new ArrayList<>();
 
         int rows = sheet.getLastRowNum() - sheet.getFirstRowNum();
-        for (int i = Constants.SLM0003_COLUMN_INDEX+1; i<rows; i++){
+        for (int i = Constants.SLM0003_ROW_INDEX +1; i<rows; i++){
             locations.add(new LocationHelper(i,sheet.getRow(i).getCell(7).getStringCellValue()));
         }
         return locations.stream()

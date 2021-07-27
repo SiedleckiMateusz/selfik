@@ -1,7 +1,5 @@
 package com.siedlecki.mateusz.gacek.core;
 
-
-
 import com.siedlecki.mateusz.gacek.core.model.Column;
 
 import java.time.LocalDateTime;
@@ -11,13 +9,19 @@ import java.util.Set;
 
 public class Constants {
     public static String SLM0003_SHEET_NAME = "Sheet";
-    public static int SLM0003_COLUMN_INDEX = 0;
+    public static int SLM0003_ROW_INDEX = 0;
     public static Set<Column> SLM0003_COLUMNS = new HashSet<>();
     public static Set<Column> SLM0003_IGNORED_VALUES = new HashSet<>();
 
     public static String PRENOT_SHEET_NAME = "SSFA";
-    public static int PRENOT_COLUMN_INDEX = 1;
+    public static int PRENOT_ROW_INDEX = 1;
     public static Set<Column> PRENOT_COLUMNS = new HashSet<>();
+
+    public static String OPQ_SHEET_NAME = "Sheet";
+    public static int OPQ_ROW_INDEX = 0;
+    public static Set<Column> OPQ_COLUMNS = new HashSet<>();
+    public static int OPQ_DAYS_TO_PICK = 1;
+
 
     public static String RESULT_DIRECTORY_PATH = System.getProperty("user.dir")+"\\WYGENEROWANE PLIKI";
     public static String STATS_DIRECTORY_PATH = System.getProperty("user.dir")+"\\ST";
@@ -54,6 +58,13 @@ public class Constants {
         PRENOT_COLUMNS.add(Column.builder().index(14).name("DO").build());
         PRENOT_COLUMNS.add(Column.builder().index(15).name("ILOŚĆ").build());
 
+        OPQ_COLUMNS.add(Column.builder().index(2).name("ARTNO").build());
+        OPQ_COLUMNS.add(Column.builder().index(7).name("OPEN_PICK_QTY").build());
+        OPQ_COLUMNS.add(Column.builder().index(14).name("PICK_AREA").build());
+        OPQ_COLUMNS.add(Column.builder().index(19).name("CUT_OFF_DATE").build());
+        OPQ_COLUMNS.add(Column.builder().index(20).name("CUT_OFF_TIME").build());
+        OPQ_COLUMNS.add(Column.builder().index(27).name("DELIVERY_METHOD").build());
+
         EXCEL_COLUMNS_NAMES = new String[]{
                 "SPECSHOP",
                 "RANGE GR",
@@ -62,7 +73,7 @@ public class Constants {
                 "LOCATIONS",
                 "ASSQ",
                 "PAL QTY",
-                "AVALIABLE STOCK",
+                "AVAILABLE STOCK",
                 "ON SALE PLACES",
                 "FREE SPACE",
                 "FREE SPACE[PQ]",
