@@ -1,10 +1,12 @@
 package com.siedlecki.mateusz.gacek.core;
 
+import com.siedlecki.mateusz.gacek.core.mapper.OpqMapper;
 import com.siedlecki.mateusz.gacek.core.mapper.PrenotMapper;
 import com.siedlecki.mateusz.gacek.core.mapper.Slm00003Mapper;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProductToWrite;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
+import com.siedlecki.mateusz.gacek.core.model.opq.PickingProduct;
 import com.siedlecki.mateusz.gacek.core.reader.SheetReader;
 import com.siedlecki.mateusz.gacek.core.reader.SheetReaderFactory;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class FileGeneratorService {
@@ -38,7 +42,7 @@ public class FileGeneratorService {
 
         Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
         Sheet prenotSheet = prenotReader.getSheetFromFile(prenotFile);
-        List<IkeaProduct> ikeaProducts = Slm00003Mapper.mapToProductList(slm0003Sheet);
+        List<IkeaProduct> ikeaProducts = new ArrayList<>(Slm00003Mapper.mapToProductsMap(slm0003Sheet).values());
         List<PrenotProduct> prenotProducts = PrenotMapper.mapToProductList(prenotSheet);
 
         IkeaProductProcessor ikeaProductProcessor = new IkeaProductProcessor();
@@ -59,7 +63,7 @@ public class FileGeneratorService {
 
     public XlsxFileWriter morningOrderProcess(MultipartFile slm0003File, boolean saveToStats) throws IOException {
         Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
-        List<IkeaProduct> ikeaProducts = Slm00003Mapper.mapToProductList(slm0003Sheet);
+        List<IkeaProduct> ikeaProducts = new ArrayList<>(Slm00003Mapper.mapToProductsMap(slm0003Sheet).values());
 
         Map<String, List<IkeaProductToWrite>> map = ikeaProductProcessor.getProductsToOrderAndPrepare(ikeaProducts);
 
@@ -79,11 +83,13 @@ public class FileGeneratorService {
     public XlsxFileWriter morningOrderProcess(MultipartFile slm0003File, MultipartFile opqFile, boolean saveToStats) throws IOException {
         Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
         Sheet opqSheet = opqReader.getSheetFromFile(opqFile);
-        List<IkeaProduct> ikeaProducts = Slm00003Mapper.mapToProductList(slm0003Sheet);
+        Map<String, IkeaProduct> ikeaProductMap = Slm00003Mapper.mapToProductsMap(slm0003Sheet);
+        List<IkeaProduct> ikeaProducts = new ArrayList<>(ikeaProductMap.values());
+        Map<String, PickingProduct> pickingProductMap = OpqMapper.mapToPickingProduct(opqSheet,ikeaProductMap);
 
-        Map<String, List<IkeaProductToWrite>> map = ikeaProductProcessor.getProductsToOrderAndPrepare(ikeaProducts);
+        Map<String, List<IkeaProductToWrite>> map = ikeaProductProcessor.getProductsToOrderAndPrepareWithOpq(ikeaProducts,pickingProductMap);
 
-        String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+        String fileName = "Poranne zamówienie z OPQ " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         XlsxFileWriter writer = new XlsxFileWriter(fileName);
         writer = writer.addSheet(map.get("toPrepareFromOrder"), "Places to prepare")
                 .addSheet(map.get("toOrder"), "L23 order");

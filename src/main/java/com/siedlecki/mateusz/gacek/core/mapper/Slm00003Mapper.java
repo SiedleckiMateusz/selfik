@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class Slm00003Mapper {
 
-    public static List<IkeaProduct> mapToProductList(Sheet sheet) throws IOException {
+    public static Map<String,IkeaProduct> mapToProductsMap(Sheet sheet) throws IOException {
         List<LocationHelper> locationOrder = sortSheetByLocation(sheet);
 
         Map<String,IkeaProduct> productMap = new HashMap<>();
@@ -33,10 +33,7 @@ public class Slm00003Mapper {
                 }
             }
         }
-        return new ArrayList<>(productMap.values())
-                .stream()
-                .sorted(Comparator.comparing(o -> o.getLocations().first()))
-                .collect(Collectors.toList());
+        return productMap;
     }
 
     private static List<LocationHelper> sortSheetByLocation(Sheet sheet) {

@@ -17,7 +17,7 @@ public class IkeaProduct {
     private Integer assq;
     private final Double avgSales;
     private final Integer palQty;
-    private final Integer availableStock;
+    private Integer availableStock;
     private final Integer sgf;
     private final Double volume;
     private int prenotSales;
@@ -56,6 +56,10 @@ public class IkeaProduct {
     }
     public void addPrenotBufferQty(int qty) {
         prenotBuffer += qty;
+    }
+
+    public void addReservationAfterDay(int qty){
+        availableStock+=qty;
     }
 
     @Override

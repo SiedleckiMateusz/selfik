@@ -109,6 +109,7 @@ public class MainController {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.of(Optional.of(e.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

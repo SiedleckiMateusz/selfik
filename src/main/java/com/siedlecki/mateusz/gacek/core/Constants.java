@@ -3,8 +3,11 @@ package com.siedlecki.mateusz.gacek.core;
 import com.siedlecki.mateusz.gacek.core.model.Column;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Constants {
@@ -21,6 +24,9 @@ public class Constants {
     public static int OPQ_ROW_INDEX = 0;
     public static Set<Column> OPQ_COLUMNS = new HashSet<>();
     public static int OPQ_DAYS_TO_PICK = 1;
+
+    public static List<LocalTime> CPS_CUT_OFF_TIME = new ArrayList<>();
+    public static List<LocalTime> FPS_CUT_OFF_TIME = new ArrayList<>();
 
 
     public static String RESULT_DIRECTORY_PATH = System.getProperty("user.dir")+"\\WYGENEROWANE PLIKI";
@@ -64,6 +70,16 @@ public class Constants {
         OPQ_COLUMNS.add(Column.builder().index(19).name("CUT_OFF_DATE").build());
         OPQ_COLUMNS.add(Column.builder().index(20).name("CUT_OFF_TIME").build());
         OPQ_COLUMNS.add(Column.builder().index(27).name("DELIVERY_METHOD").build());
+
+        CPS_CUT_OFF_TIME.add(LocalTime.of(10,45));
+        CPS_CUT_OFF_TIME.add(LocalTime.of(12,0));
+        CPS_CUT_OFF_TIME.add(LocalTime.of(16,0));
+        CPS_CUT_OFF_TIME.add(LocalTime.of(20,0));
+        CPS_CUT_OFF_TIME.add(LocalTime.of(22,0));
+
+        FPS_CUT_OFF_TIME.add(LocalTime.of(17,15));
+        FPS_CUT_OFF_TIME.add(LocalTime.of(19,30));
+        FPS_CUT_OFF_TIME.add(LocalTime.of(20,30));
 
         EXCEL_COLUMNS_NAMES = new String[]{
                 "SPECSHOP",

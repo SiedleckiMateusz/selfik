@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Builder
-@Getter
+@Getter()
 public class Pick {
     private final int pickQty;
     private final LocalDate cutOffDate;
@@ -20,6 +20,15 @@ public class Pick {
         this.cutOffDate = cutOffDate;
         this.cutOffTime = cutOffTime;
         this.deliveryMethod = deliveryMethod;
+    }
+
+    @Override
+    public String toString() {
+        return "Pick{" +
+                "pickQty=" + pickQty +
+                ", cutOffDate=" + cutOffDate +
+                ", cutOffTime=" + cutOffTime +
+                '}';
     }
 
     public Pick(int pickQty, String cutOffDate, String cutOffTime, String deliveryMethod) {
@@ -37,6 +46,7 @@ public class Pick {
         }else {
             this.cutOffTime = null;
         }
+
 
     }
 }

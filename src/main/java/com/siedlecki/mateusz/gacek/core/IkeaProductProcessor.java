@@ -4,6 +4,7 @@ import com.siedlecki.mateusz.gacek.core.model.IkeaProductToWrite;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.OrderType;
 import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
+import com.siedlecki.mateusz.gacek.core.model.opq.PickingProduct;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -49,8 +50,27 @@ public class IkeaProductProcessor {
         return listsMap;
     }
 
+    public Map<String, List<IkeaProductToWrite>> getProductsToOrderAndPrepareWithOpq(List<IkeaProduct> ikeaProducts, Map<String, PickingProduct> pickingProductMap) {
+        List<IkeaProduct> ikeaProductsModified = modifyIkeaProductsByPickingProducts(ikeaProducts, pickingProductMap);
+
+        return getProductsToOrderAndPrepare(ikeaProductsModified);
+    }
+
+    private List<IkeaProduct> modifyIkeaProductsByPickingProducts(List<IkeaProduct> ikeaProducts, Map<String, PickingProduct> pickingProductMap) {
+        for (IkeaProduct p : ikeaProducts){
+            if (pickingProductMap.containsKey(p.getNumberId())){
+                PickingProduct pickingProduct = pickingProductMap.get(p.getNumberId());
+                System.out.println(pickingProduct.toString());
+                p.addReservationAfterDay(pickingProduct.getQtyAfterDay());
+            }
+        }
+        return ikeaProducts;
+    }
+
     public Map<String, List<IkeaProductToWrite>> getProductsToOrderAndPrepare(List<IkeaProduct> ikeaProducts) {
-        List<IkeaProductToWrite> productsToOrder = getProductsToOrder(ikeaProducts).stream().map(p -> new IkeaProductToWrite(p, OrderType.L23)).collect(Collectors.toList());
+        List<IkeaProductToWrite> productsToOrder = getProductsToOrder(ikeaProducts).stream()
+                .map(p -> new IkeaProductToWrite(p, OrderType.L23))
+                .collect(Collectors.toList());
         List<IkeaProductToWrite> productListToPrepare = getProductListToPrepare(productsToOrder);
 
         Map<String, List<IkeaProductToWrite>> listsMap = new HashMap<>();
@@ -87,7 +107,6 @@ public class IkeaProductProcessor {
                 }
             }
         }
-
         return resultProducts;
     }
 
