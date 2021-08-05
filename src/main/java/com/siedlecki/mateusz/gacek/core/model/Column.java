@@ -1,11 +1,13 @@
 package com.siedlecki.mateusz.gacek.core.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Objects;
 
 @Builder
+@AllArgsConstructor
 @Getter
 public class Column {
     private Integer index;

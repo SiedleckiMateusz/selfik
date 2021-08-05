@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -39,14 +40,13 @@ public class OpqMapper {
     }
 
     private static Pick mapToPick(Row row) {
-        Cell pickQtyCell = row.getCell(6);
+        Cell pickQtyCell = row.getCell(7);
         Cell cutOffDateCell = row.getCell(19);
-        Cell serviceProviderCell = row.getCell(28);
-        String serviceProvider = serviceProviderCell.getStringCellValue().trim();
+        Cell cutOffTimeCell = row.getCell(20);
 
         int pickQty = (int) pickQtyCell.getNumericCellValue();
-        LocalDate cutOffDate = null;
 
+        LocalDate cutOffDate = null;
         String cutOffDateString = cutOffDateCell.getStringCellValue().trim();
 
         if (!cutOffDateString.isEmpty()){
@@ -57,6 +57,16 @@ public class OpqMapper {
             }
         }
 
-        return new Pick(pickQty,cutOffDate,serviceProvider);
+        LocalTime cutOffTime = null;
+        String cutOffTimeString = cutOffTimeCell.getStringCellValue().trim();
+        if (!cutOffTimeString.isEmpty()){
+            try{
+                cutOffTime = LocalTime.parse(cutOffTimeString, DateTimeFormatter.ofPattern("HH:mm"));
+            }catch (DateTimeParseException e){
+                System.err.println("Nie można sparsować godziny: "+ cutOffDateString);
+            }
+        }
+
+        return new Pick(pickQty,cutOffDate,cutOffTime);
     }
 }

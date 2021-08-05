@@ -26,6 +26,7 @@ public class Constants {
     public static int OPQ_DAYS_TO_PICK = 1;
 
     public static String FPS_SERVICE_PROVIDER = "32081";
+    public static LocalTime CPS_CUT_OF_TIME = LocalTime.of(16,0);
 
     public static DateTimeFormatter SIMPLE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
@@ -59,9 +60,9 @@ public class Constants {
         PRENOT_COLUMNS.add(Column.builder().index(15).name("ILOŚĆ").build());
 
         OPQ_COLUMNS.add(Column.builder().index(2).name("ARTNO").build());
-        OPQ_COLUMNS.add(Column.builder().index(6).name("OPEN_PICK_QTY").build());
+        OPQ_COLUMNS.add(Column.builder().index(7).name("OPEN_PICK_QTY").build());
         OPQ_COLUMNS.add(Column.builder().index(19).name("CUT_OFF_DATE").build());
-        OPQ_COLUMNS.add(Column.builder().index(28).name("SERVICE_PROVIDER").build());
+        OPQ_COLUMNS.add(Column.builder().index(20).name("CUT_OFF_TIME").build());
 
         EXCEL_COLUMNS_NAMES = new String[]{
                 "SPECSHOP",

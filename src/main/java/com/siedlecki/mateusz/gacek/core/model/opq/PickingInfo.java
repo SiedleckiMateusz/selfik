@@ -20,15 +20,15 @@ public class PickingInfo {
     }
 
     public void addPick(Pick pick){
-        if (pick.getCutOffDate()!=null && pick.getServiceProvider()!=null && !pick.getServiceProvider().isEmpty()) {
+        if (pick.getCutOffDate()!=null && pick.getCutOffTime()!=null) {
             if (pick.getCutOffDate().isAfter(date)) {
                 qtyAfterDay+=pick.getPickqty();
             } else {
                 qtyToOrder+=pick.getPickqty();
-                if (Constants.FPS_SERVICE_PROVIDER.equals(pick.getServiceProvider().trim())) {
-                    qtyReservationInFps+=pick.getPickqty();
-                }else {
+                if (Constants.CPS_CUT_OF_TIME.equals(pick.getCutOffTime())) {
                     qtyReservationInCps+=pick.getPickqty();
+                }else {
+                    qtyReservationInFps+=pick.getPickqty();
                 }
             }
         }else {
