@@ -28,7 +28,7 @@ public class IkeaProduct {
     private PickingInfo pickingInfo;
 
     public int onSalePlaces() {
-        return availableStock + pickingInfo.getQtyAfterDay() - sgf;
+        return availableStock + (pickingInfo != null ? pickingInfo.getQtyAfterDay() : 0) - sgf;
     }
 
     public int freeSpace() {
