@@ -6,7 +6,7 @@ import com.siedlecki.mateusz.gacek.core.mapper.Slm00003Mapper;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProductToWrite;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
-import com.siedlecki.mateusz.gacek.core.model.opq.PickingProduct;
+import com.siedlecki.mateusz.gacek.core.model.opq.PickingInfo;
 import com.siedlecki.mateusz.gacek.core.reader.SheetReader;
 import com.siedlecki.mateusz.gacek.core.reader.SheetReaderFactory;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -19,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class FileGeneratorService {
@@ -36,6 +35,16 @@ public class FileGeneratorService {
 
     public FileGeneratorService(IkeaProductProcessor ikeaProductProcessor) {
         this.ikeaProductProcessor = ikeaProductProcessor;
+    }
+
+    public Map<String,IkeaProduct> processSlm0003file(MultipartFile slm0003File) throws IOException {
+        Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
+        return Slm00003Mapper.mapToProductsMap(slm0003Sheet);
+    }
+
+    public Map<String,IkeaProduct> processOpq(MultipartFile opqFile,Map<String,IkeaProduct>ikeaProductMap) throws IOException {
+        Sheet opqSheet = opqReader.getSheetFromFile(opqFile);
+        return OpqMapper.processPickingProduct(opqSheet,ikeaProductMap);
     }
 
     public XlsxFileWriter prenotProcess(MultipartFile slm0003File, MultipartFile prenotFile, boolean saveToStats) throws IOException {
@@ -85,9 +94,9 @@ public class FileGeneratorService {
         Sheet opqSheet = opqReader.getSheetFromFile(opqFile);
         Map<String, IkeaProduct> ikeaProductMap = Slm00003Mapper.mapToProductsMap(slm0003Sheet);
         List<IkeaProduct> ikeaProducts = new ArrayList<>(ikeaProductMap.values());
-        Map<String, PickingProduct> pickingProductMap = OpqMapper.mapToPickingProduct(opqSheet,ikeaProductMap);
+        OpqMapper.processPickingProduct(opqSheet,ikeaProductMap);
 
-        Map<String, List<IkeaProductToWrite>> map = ikeaProductProcessor.getProductsToOrderAndPrepareWithOpq(ikeaProducts,pickingProductMap);
+        Map<String, List<IkeaProductToWrite>> map = ikeaProductProcessor.getProductsToOrderAndPrepareWithOpq(ikeaProducts,null);
 
         String fileName = "Poranne zamówienie z OPQ " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         XlsxFileWriter writer = new XlsxFileWriter(fileName);

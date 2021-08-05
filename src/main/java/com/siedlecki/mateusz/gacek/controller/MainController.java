@@ -2,6 +2,7 @@ package com.siedlecki.mateusz.gacek.controller;
 
 import com.siedlecki.mateusz.gacek.core.FileGeneratorService;
 import com.siedlecki.mateusz.gacek.core.XlsxFileWriter;
+import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -12,14 +13,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
-@Controller
+//@Controller
 public class MainController {
 
     private final FileGeneratorService service;

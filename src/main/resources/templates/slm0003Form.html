@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SLM0003 Loader</title>
+</head>
+<body>
+<form action="/slm0003File" method="post" enctype="multipart/form-data">
+    <p class="error" style="color: red"
+       th:if="${param.error}!= null">Podany plik nie jest poprawny. Spróbuj ponownie</p>
+    <label for="slm0003">Plik SLM0003:</label>
+    <input type="file"
+           id="slm0003" name="slm0003"
+           accept=".xls,.xlsx">
+
+    <!--    <br>-->
+    <!--    <label for="opq">Plik OPQ (Open pick quantity):</label>-->
+    <!--    <input type="file"-->
+    <!--           id="opq" name="opq"-->
+    <!--           accept=".xls,.xlsx">-->
+
+    <br>
+    <input type="submit" value="Generuj" name="submit">
+</form>
+</body>
+</html>

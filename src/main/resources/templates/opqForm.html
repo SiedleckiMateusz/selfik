@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SLM0003 Loader</title>
+</head>
+<body>
+<form action="/opqFile" method="post" enctype="multipart/form-data">
+    <p class="error" style="color: red"
+       th:if="${param.error}!= null">Podany plik nie jest poprawny. Spróbuj ponownie</p>
+    <label for="opq">Plik Open pick quantity (OPQ_CFB_PG):</label>
+    <input type="file"
+           id="opq" name="opq"
+           accept=".xls,.xlsx">
+    <br>
+    <input type="submit" value="Generuj" name="submit">
+</form>
+</body>
+</html>

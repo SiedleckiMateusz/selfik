@@ -4,7 +4,7 @@ import com.siedlecki.mateusz.gacek.core.model.IkeaProductToWrite;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.OrderType;
 import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
-import com.siedlecki.mateusz.gacek.core.model.opq.PickingProduct;
+import com.siedlecki.mateusz.gacek.core.model.opq.PickingInfo;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -50,18 +50,18 @@ public class IkeaProductProcessor {
         return listsMap;
     }
 
-    public Map<String, List<IkeaProductToWrite>> getProductsToOrderAndPrepareWithOpq(List<IkeaProduct> ikeaProducts, Map<String, PickingProduct> pickingProductMap) {
+    public Map<String, List<IkeaProductToWrite>> getProductsToOrderAndPrepareWithOpq(List<IkeaProduct> ikeaProducts, Map<String, PickingInfo> pickingProductMap) {
         List<IkeaProduct> ikeaProductsModified = modifyIkeaProductsByPickingProducts(ikeaProducts, pickingProductMap);
 
         return getProductsToOrderAndPrepare(ikeaProductsModified);
     }
 
-    private List<IkeaProduct> modifyIkeaProductsByPickingProducts(List<IkeaProduct> ikeaProducts, Map<String, PickingProduct> pickingProductMap) {
+    private List<IkeaProduct> modifyIkeaProductsByPickingProducts(List<IkeaProduct> ikeaProducts, Map<String, PickingInfo> pickingProductMap) {
         for (IkeaProduct p : ikeaProducts){
             if (pickingProductMap.containsKey(p.getNumberId())){
-                PickingProduct pickingProduct = pickingProductMap.get(p.getNumberId());
-                System.out.println(pickingProduct.toString());
-                p.addReservationAfterDay(pickingProduct.getQtyAfterDay());
+                PickingInfo pickingInfo = pickingProductMap.get(p.getNumberId());
+                System.out.println(pickingInfo.toString());
+//                p.addReservationAfterDay(pickingInfo.getQtyAfterDay());
             }
         }
         return ikeaProducts;
