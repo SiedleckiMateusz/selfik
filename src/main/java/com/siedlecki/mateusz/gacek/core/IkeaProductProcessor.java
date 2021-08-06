@@ -55,7 +55,7 @@ public class IkeaProductProcessor {
 
         Map<String, List<IkeaProduct>> listsMap = new HashMap<>();
         listsMap.put("toOrder", productsToOrder);
-        listsMap.put("toPrepareFromOrder", productListToPrepare);
+        listsMap.put("toPrepare", productListToPrepare);
 
         return listsMap;
     }

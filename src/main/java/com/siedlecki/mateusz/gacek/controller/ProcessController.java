@@ -65,7 +65,6 @@ public class ProcessController {
         if (morningProcessFlag) {
             return "redirect:/morning-order";
         }
-
         return "redirect:/";
     }
 
@@ -79,7 +78,7 @@ public class ProcessController {
             return "form/opqForm";
         }
 
-        String fileName = "Poranne zamówienie z OPQ " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+        String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
             Map<String, List<IkeaProduct>> productMaps = service.getProductsToOrderAndPrepare(ikeaProductMap);
             fileWriter = service.generateXlsxFile(productMaps,fileName);
