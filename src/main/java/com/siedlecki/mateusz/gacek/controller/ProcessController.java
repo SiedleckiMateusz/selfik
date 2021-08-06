@@ -51,8 +51,11 @@ public class ProcessController {
     @GetMapping("/")
     public String mainSite() {
         log.info("Go to menu");
+        reset();
+        log.info("Reset files");
         return "index";
     }
+
 
     @GetMapping("process")
     public String process() {
