@@ -40,10 +40,34 @@ public class FileGeneratorService {
         return Slm00003Mapper.mapToProductsMap(slm0003Sheet);
     }
 
+    public Map<String,PrenotProduct> processPrenotFile(MultipartFile prenotFile) throws IOException {
+        Sheet prenotSheet = prenotReader.getSheetFromFile(prenotFile);
+        return PrenotMapper.mapToPrenotProductMap(prenotSheet);
+    }
+
     public Map<String,IkeaProduct> processOpq(MultipartFile opqFile,Map<String,IkeaProduct>ikeaProductMap) throws IOException {
         Sheet opqSheet = opqReader.getSheetFromFile(opqFile);
         return OpqMapper.processPickingProduct(opqSheet,ikeaProductMap);
     }
+
+    public Map<String, List<IkeaProduct>> getProductsToOrderAndPrepare(Map<String,IkeaProduct> ikeaProductMap){
+        return ikeaProductProcessor.getProductsToOrderAndPrepare(new ArrayList<>(ikeaProductMap.values()));
+    }
+
+    public Map<String, List<IkeaProduct>> getProductsToOrderAndPrepare(
+            Map<String,IkeaProduct> ikeaProducts, Map<String,PrenotProduct> prenotProducts){
+        return ikeaProductProcessor.getProductsToPrepareAndExtraOrder(new ArrayList<>(ikeaProducts.values()),new ArrayList<>(prenotProducts.values()));
+    }
+
+    public XlsxFileWriter generateXlsxFile(Map<String, List<IkeaProduct>> map,String fileName) throws IOException {
+        XlsxFileWriter writer = new XlsxFileWriter(fileName);
+        writer = writer.addSheet(map.get("toPrepareFromOrder"), "Places to prepare")
+                .addSheet(map.get("toOrder"), "L23 order");
+
+        return writer;
+    }
+
+    /* ******************************************************************************* */
 
     public XlsxFileWriter getXlsxFile(Map<String,IkeaProduct> ikeaProductMap) throws IOException {
         Map<String, List<IkeaProduct>> map = ikeaProductProcessor.getProductsToOrderAndPrepare(new ArrayList<>(ikeaProductMap.values()));
@@ -62,7 +86,7 @@ public class FileGeneratorService {
         Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
         Sheet prenotSheet = prenotReader.getSheetFromFile(prenotFile);
         List<IkeaProduct> ikeaProducts = new ArrayList<>(Slm00003Mapper.mapToProductsMap(slm0003Sheet).values());
-        List<PrenotProduct> prenotProducts = PrenotMapper.mapToProductList(prenotSheet);
+        List<PrenotProduct> prenotProducts = new ArrayList<>(PrenotMapper.mapToPrenotProductMap(prenotSheet).values());
 
         IkeaProductProcessor ikeaProductProcessor = new IkeaProductProcessor();
         Map<String, List<IkeaProduct>> map = ikeaProductProcessor.getProductsToPrepareAndExtraOrder(ikeaProducts, prenotProducts);

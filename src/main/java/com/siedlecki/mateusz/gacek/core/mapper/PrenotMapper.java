@@ -12,21 +12,21 @@ import java.util.Map;
 
 public class PrenotMapper {
 
-    public static List<PrenotProduct> mapToProductList(Sheet sheet) {
-        Map<String,PrenotProduct> productMap = new HashMap<>();
+    public static Map<String,PrenotProduct> mapToPrenotProductMap(Sheet sheet) {
+        Map<String,PrenotProduct> prenotMap = new HashMap<>();
         int rows = sheet.getLastRowNum() - sheet.getFirstRowNum();
         for (int i = rows; i > Constants.PRENOT_ROW_INDEX; i--) {
             Row row = sheet.getRow(i);
             PrenotProduct product = mapToProduct(row);
-            if (productMap.containsKey(product.getNumberId())){
-                PrenotProduct productInMap = productMap.get(product.getNumberId());
+            if (prenotMap.containsKey(product.getNumberId())){
+                PrenotProduct productInMap = prenotMap.get(product.getNumberId());
                 productInMap.addQtyBuffer(product.getQtyBuffer());
                 productInMap.addQtySales(product.getQtySales());
             }else {
-                productMap.put(product.getNumberId(),product);
+                prenotMap.put(product.getNumberId(),product);
             }
         }
-        return new ArrayList<>(productMap.values());
+        return prenotMap;
     }
 
     private static PrenotProduct mapToProduct(Row row) {
