@@ -61,7 +61,7 @@ public class FileGeneratorService {
 
     public XlsxFileWriter generateXlsxFile(Map<String, List<IkeaProduct>> map,String fileName) throws IOException {
         XlsxFileWriter writer = new XlsxFileWriter(fileName);
-        writer = writer.addSheet(map.get("toPrepareFromOrder"), "Places to prepare")
+        writer = writer.addSheet(map.get("toPrepare"), "Places to prepare")
                 .addSheet(map.get("toOrder"), "L23 order");
 
         return writer;

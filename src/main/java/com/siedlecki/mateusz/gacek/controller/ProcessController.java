@@ -189,8 +189,11 @@ public class ProcessController {
     @PostMapping("prenotFile")
     public String processPrenot(@RequestAttribute("prenot") MultipartFile prenot) {
         try {
+            log.info("Recive Prenot file");
             prenotProductMap = service.processPrenotFile(prenot);
+            log.info("Processed Prenot file");
             prenotFlag = true;
+            log.info("Set prenotFlag on true");
         } catch (IOException e) {
             return "redirect:/prenotForm?error";
         }
