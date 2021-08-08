@@ -39,17 +39,21 @@ public class IkeaProduct {
         return sgf + prenotBuffer;
     }
 
-    public int toL23Order() {
+    public int l23Order() {
         int min = Math.min(freeSpace(), bufferAndSgf());
         return Math.max(min, 0);
     }
 
-    public int toL23OrderPQ() {
-        return toL23Order() / palQty;
+    public double l23OrderPQ() {
+        return (double) l23Order() / palQty;
+    }
+
+    public int l23OrderToFullPal() {
+        return l23Order() / palQty;
     }
 
     public int freeSpaceAfterOrder() {
-        return freeSpace() - toL23Order();
+        return freeSpace() - l23Order();
     }
 
     public int freeSpaceBeforePrenot() {
@@ -86,4 +90,6 @@ public class IkeaProduct {
                 + assq + ", refill level: " + onSalePlaces() + " free space: "
                 + freeSpace() + "/" + freeSpace() / palQty + "pallets";
     }
+
+
 }

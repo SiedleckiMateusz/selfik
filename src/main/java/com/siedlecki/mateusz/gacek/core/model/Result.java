@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 public class Result {
+    private List<IkeaProduct> all;
     private List<IkeaProduct> toOrder;
     private List<IkeaProduct> toPrepare;
 

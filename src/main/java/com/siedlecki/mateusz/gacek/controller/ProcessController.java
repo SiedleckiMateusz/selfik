@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,9 +33,9 @@ public class ProcessController {
     private Map<String, PrenotProduct> prenotProductMap;
     private XlsxFileWriter fileWriter;
 
-    private boolean SLM0003Flag;
-    private boolean prenotFlag;
-    private boolean opqFlag;
+    private boolean SLM0003IsOkFlag;
+    private boolean prenotIsOkFlag;
+    private boolean opqIsOkFlag;
 
     private boolean prenotProcessFlag;
     private boolean morningProcessFlag;
@@ -72,10 +71,10 @@ public class ProcessController {
     @GetMapping("morning-order")
     public String morningOrderProcess() {
         morningProcessFlag = true;
-        if (!SLM0003Flag) {
+        if (!SLM0003IsOkFlag) {
             return "form/slm0003Form";
         }
-        if (!opqFlag) {
+        if (!opqIsOkFlag) {
             return "form/opqForm";
         }
 
@@ -92,13 +91,13 @@ public class ProcessController {
     @GetMapping("prenotification")
     public String prenotOrderProcess() {
         prenotProcessFlag = true;
-        if (!SLM0003Flag) {
+        if (!SLM0003IsOkFlag) {
             return "redirect:/slm0003Form";
         }
-        if (!opqFlag) {
+        if (!opqIsOkFlag) {
             return "redirect:/opqForm";
         }
-        if (!prenotFlag) {
+        if (!prenotIsOkFlag) {
             return "redirect:/prenotForm";
         }
         String fileName = "Prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
@@ -114,9 +113,9 @@ public class ProcessController {
 
     private void reset() {
         log.info("Restarting params");
-        SLM0003Flag = false;
-        opqFlag = false;
-        prenotFlag = false;
+        SLM0003IsOkFlag = false;
+        opqIsOkFlag = false;
+        prenotIsOkFlag = false;
 
         ikeaProductMap = null;
         prenotProductMap = null;
@@ -165,7 +164,7 @@ public class ProcessController {
             log.info("Recive slm0003 file");
             ikeaProductMap = service.processSlm0003file(slm0003);
             log.info("Processed slm0003 file");
-            SLM0003Flag = true;
+            SLM0003IsOkFlag = true;
             log.info("Set slm0003Flag on true");
         } catch (IOException e) {
             return "redirect:/slm0003Form?error";
@@ -180,7 +179,7 @@ public class ProcessController {
             log.info("Recive OPQ file");
             ikeaProductMap = service.processOpq(opq, ikeaProductMap);
             log.info("Processed OPQ file");
-            opqFlag = true;
+            opqIsOkFlag = true;
             log.info("Set OpqFlag on true");
         } catch (IOException e) {
             return "redirect:/opqForm?error";
@@ -195,7 +194,7 @@ public class ProcessController {
             log.info("Recive Prenot file");
             prenotProductMap = service.processPrenotFile(prenot);
             log.info("Processed Prenot file");
-            prenotFlag = true;
+            prenotIsOkFlag = true;
             log.info("Set prenotFlag on true");
         } catch (IOException e) {
             return "redirect:/prenotForm?error";

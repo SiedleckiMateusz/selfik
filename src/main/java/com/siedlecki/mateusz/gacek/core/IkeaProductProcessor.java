@@ -24,6 +24,7 @@ public class IkeaProductProcessor {
             }
         });
 
+
         List<IkeaProduct> inPrenotProducts = ikeaProducts.stream()
                 .filter(p -> p.getPrenotSales() > 0)
                 .collect(Collectors.toList());
@@ -40,13 +41,13 @@ public class IkeaProductProcessor {
         List<IkeaProduct> productsToOrder = getProductsToOrder(ikeaProducts);
         List<IkeaProduct> productListToPrepare = getProductListToPrepare(productsToOrder);
 
-        return new Result(productsToOrder,productListToPrepare);
+        return new Result(ikeaProducts,productsToOrder,productListToPrepare);
     }
 
     private List<IkeaProduct> getProductsToOrder(List<IkeaProduct> ikeaProducts) {
         List<IkeaProduct> resultProducts = new ArrayList<>();
         for (IkeaProduct product : ikeaProducts) {
-            if (product.toL23OrderPQ() >= 1) {
+            if (product.l23OrderToFullPal() >= 1) {
                 if (product.getSgf() > 0) {
                     resultProducts.add(product);
                 }

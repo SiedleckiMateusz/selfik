@@ -4,6 +4,7 @@ package com.siedlecki.mateusz.gacek.core.reader;
 import com.siedlecki.mateusz.gacek.core.model.Column;
 import lombok.AllArgsConstructor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -40,17 +41,20 @@ public class SheetReader {
     }
 
     private boolean isCorrectColumn(Row row, Column column){
-        return row.getCell(column.getIndex()).getStringCellValue().trim().equals(column.getName().toUpperCase());
+        Cell cell = row.getCell(column.getIndex(), Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+        return cell != null && cell.getStringCellValue().trim().equals(column.getName().toUpperCase());
     }
 
     private Workbook createWorkbook(MultipartFile file) throws IOException {
         try(InputStream inputStream = file.getInputStream()){
             String name = file.getOriginalFilename();
-            if (name.endsWith(".xlsx")) {
-                return new XSSFWorkbook(inputStream);
-            }
-            if (name.endsWith(".xls")) {
-                return new HSSFWorkbook(inputStream);
+            if (name!=null){
+                if (name.endsWith(".xlsx")) {
+                    return new XSSFWorkbook(inputStream);
+                }
+                if (name.endsWith(".xls")) {
+                    return new HSSFWorkbook(inputStream);
+                }
             }
             throw new IOException("Plik "+ name +" nie jest w formacie .xls lub .xlsx");
         }catch (Exception e){

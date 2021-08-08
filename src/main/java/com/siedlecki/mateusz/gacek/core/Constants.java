@@ -28,8 +28,6 @@ public class Constants {
     public static String FPS_SERVICE_PROVIDER = "32081";
     public static LocalTime CPS_CUT_OF_TIME = LocalTime.of(16,0);
 
-    public static DateTimeFormatter SIMPLE_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-
     public static String[] EXCEL_COLUMNS_NAMES;
 
     static {
@@ -81,25 +79,5 @@ public class Constants {
                 "L23 ORDER[PQ]",
                 "FREE SPACE AFTER ORDER"
         };
-    }
-
-    public static void getLogo(){
-        System.out.println("*********************************************************************************************");
-        System.out.println("*      ,o888888o.             .8.              ,o888888o.    8 8888888888   8 8888     ,88' *");
-        System.out.println("*     8888     `88.          .888.            8888     `88.  8 8888         8 8888    ,88'  *");
-        System.out.println("*  ,8 8888       `8.        :88888.        ,8 8888       `8. 8 8888         8 8888   ,88'   *");
-        System.out.println("*  88 8888                 . `88888.       88 8888           8 8888         8 8888  ,88'    *");
-        System.out.println("*  88 8888                .8. `88888.      88 8888           8 888888888888 8 8888 ,88'     *");
-        System.out.println("*  88 8888               .8`8. `88888.     88 8888           8 8888         8 8888 88'      *");
-        System.out.println("*  88 8888   8888888    .8' `8. `88888.    88 8888           8 8888         8 888888<       *");
-        System.out.println("*  `8 8888       .8'   .8'   `8. `88888.   `8 8888       .8' 8 8888         8 8888 `Y8.     *");
-        System.out.println("*     8888     ,88'   .888888888. `88888.     8888     ,88'  8 8888         8 8888   `Y8.   *");
-        System.out.println("*      `8888888P'    .8'       `8. `88888.     `8888888P'    8 888888888888 8 8888     `Y8. *");
-        System.out.println("*********************************************************************************************");
-    }
-
-    public static String logMessage(String message){
-        String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
-        return "["+localDateTime+"] "+message;
     }
 }
