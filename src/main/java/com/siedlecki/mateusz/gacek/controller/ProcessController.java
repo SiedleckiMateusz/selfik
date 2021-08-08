@@ -4,6 +4,7 @@ import com.siedlecki.mateusz.gacek.core.FileGeneratorService;
 import com.siedlecki.mateusz.gacek.core.XlsxFileWriter;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
+import com.siedlecki.mateusz.gacek.core.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -80,8 +81,8 @@ public class ProcessController {
 
         String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
-            Map<String, List<IkeaProduct>> productMaps = service.getProductsToOrderAndPrepare(ikeaProductMap);
-            fileWriter = service.generateXlsxFile(productMaps,fileName);
+            Result result = service.getProductsToOrderAndPrepare(ikeaProductMap);
+            fileWriter = service.generateXlsxFile(result,fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,8 +103,8 @@ public class ProcessController {
         }
         String fileName = "Prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
-            Map<String, List<IkeaProduct>> productMaps = service.getProductsToOrderAndPrepare(ikeaProductMap, prenotProductMap);
-            fileWriter = service.generateXlsxFile(productMaps,fileName);
+            Result result = service.getProductsToOrderAndPrepare(ikeaProductMap, prenotProductMap);
+            fileWriter = service.generateXlsxFile(result,fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }

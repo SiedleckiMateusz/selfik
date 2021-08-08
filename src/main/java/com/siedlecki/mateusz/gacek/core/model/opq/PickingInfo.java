@@ -13,7 +13,8 @@ public class PickingInfo {
     private int qtyReservationInCps = 0;
     private int qtyReservationInFps = 0;
 
-    private final LocalDate date = LocalDate.now().plusDays(Constants.OPQ_DAYS_TO_PICK);
+//    private final LocalDate date = LocalDate.now().plusDays(Constants.OPQ_DAYS_TO_PICK);
+    private final LocalDate date = LocalDate.of(2021,8,6).plusDays(Constants.OPQ_DAYS_TO_PICK);
 
     public PickingInfo(Pick pick) {
         addPick(pick);

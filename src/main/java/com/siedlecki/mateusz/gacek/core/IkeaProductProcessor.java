@@ -2,6 +2,7 @@ package com.siedlecki.mateusz.gacek.core;
 
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
+import com.siedlecki.mateusz.gacek.core.model.Result;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class IkeaProductProcessor {
 
-    public Map<String, List<IkeaProduct>> getProductsToPrepareAndExtraOrder(List<IkeaProduct> ikeaProducts, List<PrenotProduct> prenotProducts) {
+    public Result getProductsToPrepareAndExtraOrder(List<IkeaProduct> ikeaProducts, List<PrenotProduct> prenotProducts) {
 
         prenotProducts.forEach(prenotProduct -> {
             Optional<IkeaProduct> ikeaProductOpt = ikeaProducts.stream()
@@ -27,37 +28,19 @@ public class IkeaProductProcessor {
                 .filter(p -> p.getPrenotSales() > 0)
                 .collect(Collectors.toList());
 
-//        inPrenotProducts.forEach(p -> p.setType(OrderType.PRENOT));
-
-        Map<String, List<IkeaProduct>> listsMap = new HashMap<>();
         List<IkeaProduct> toPrepareFromPrenot = getProductListToPrepare(inPrenotProducts);
-        Map<String, List<IkeaProduct>> productsToOrderAndPrepare = getProductsToOrderAndPrepare(ikeaProducts);
+        Result result = getProductsToOrderAndPrepare(ikeaProducts);
 
-        List<IkeaProduct> toOrder = productsToOrderAndPrepare.get("toOrder");
-        List<IkeaProduct> toPrepareFromOrder = productsToOrderAndPrepare.get("toPrepareFromOrder");
+        result.addToPrepare(toPrepareFromPrenot);
 
-        List<IkeaProduct> toPrepare = new ArrayList<>();
-        toPrepare.addAll(toPrepareFromPrenot);
-        toPrepare.addAll(toPrepareFromOrder);
-
-        toPrepare = toPrepare.stream().distinct().sorted(new FirstLocationComparator()).collect(Collectors.toList());
-
-        listsMap.put("toPrepare", toPrepare);
-        listsMap.put("toOrder", toOrder);
-
-        return listsMap;
+        return result;
     }
 
-    public Map<String, List<IkeaProduct>> getProductsToOrderAndPrepare(List<IkeaProduct> ikeaProducts) {
+    public Result getProductsToOrderAndPrepare(List<IkeaProduct> ikeaProducts) {
         List<IkeaProduct> productsToOrder = getProductsToOrder(ikeaProducts);
-//        productsToOrder.forEach(p -> p.setType(OrderType.L23));
         List<IkeaProduct> productListToPrepare = getProductListToPrepare(productsToOrder);
 
-        Map<String, List<IkeaProduct>> listsMap = new HashMap<>();
-        listsMap.put("toOrder", productsToOrder);
-        listsMap.put("toPrepare", productListToPrepare);
-
-        return listsMap;
+        return new Result(productsToOrder,productListToPrepare);
     }
 
     private List<IkeaProduct> getProductsToOrder(List<IkeaProduct> ikeaProducts) {

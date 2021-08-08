@@ -7,7 +7,7 @@
 <body>
 <form action="/slm0003File" method="post" enctype="multipart/form-data">
     <p class="error" style="color: red"
-       th:if="${param.error}!= null">Podany plik nie jest poprawny. Spróbuj ponownie</p>
+       th:if="${param.error}!= null">Incorrect file. Try again</p>
     <label for="slm0003">Plik SLM0003:</label>
     <input type="file"
            id="slm0003" name="slm0003"
@@ -20,7 +20,7 @@
     <!--           accept=".xls,.xlsx">-->
 
     <br>
-    <input type="submit" value="Generuj" name="submit">
+    <input type="submit" value="NEXT" name="submit">
 </form>
 </body>
 </html>

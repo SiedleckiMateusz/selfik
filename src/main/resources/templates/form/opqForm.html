@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SLM0003 Loader</title>
+    <title>OPQ Loader</title>
 </head>
 <body>
 <form action="/opqFile" method="post" enctype="multipart/form-data">
     <p class="error" style="color: red"
-       th:if="${param.error}!= null">Podany plik nie jest poprawny. Spróbuj ponownie</p>
+       th:if="${param.error}!= null">Incorrect file. Try again</p>
     <label for="opq">Plik Open pick quantity (OPQ_PG):</label>
     <input type="file"
            id="opq" name="opq"
            accept=".xls,.xlsx">
     <br>
-    <input type="submit" value="Generuj" name="submit">
+    <input type="submit" value="NEXT" name="submit">
 </form>
 </body>
 </html>
