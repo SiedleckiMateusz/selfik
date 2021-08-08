@@ -8,7 +8,6 @@ import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
 import com.siedlecki.mateusz.gacek.core.model.Result;
 import com.siedlecki.mateusz.gacek.core.reader.SheetReader;
 import com.siedlecki.mateusz.gacek.core.reader.SheetReaderFactory;
-import com.siedlecki.mateusz.gacek.core.sheet.SheetContentGenerator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.siedlecki.mateusz.gacek.core.sheet.SheetContentGenerator.*;
+import static com.siedlecki.mateusz.gacek.core.SheetContentGenerator.*;
 
 @Service
 public class FileGeneratorService {

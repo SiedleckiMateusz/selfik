@@ -9,3 +9,19 @@
     <p>Coś poszło nie po naszej myśli... Spróbuj ponownie wykonać ostatnią operację</p>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/general :: layout(~{::title}, ~{::section})">
+<head>
+    <title>SLM0003 Loader</title>
+</head>
+<body>
+<section>
+    <h2>Ups...</h2>
+    <p>Coś poszło nie po naszej myśli... Spróbuj ponownie wykonać ostatnią operację</p>
+    <p th:text="${#messages}"></p>
+</section>
+
+</body>
+</html>

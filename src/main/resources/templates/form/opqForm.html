@@ -1,19 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/general :: layout(~{::title}, ~{::section})">
 <head>
-    <meta charset="UTF-8">
     <title>OPQ Loader</title>
 </head>
 <body>
-<form action="/opqFile" method="post" enctype="multipart/form-data">
-    <p class="error" style="color: red"
-       th:if="${param.error}!= null">Incorrect file. Try again</p>
-    <label for="opq">Plik Open pick quantity (OPQ_PG):</label>
-    <input type="file"
-           id="opq" name="opq"
-           accept=".xls,.xlsx">
-    <br>
-    <input type="submit" value="NEXT" name="submit">
-</form>
+<section>
+    <form action="/opqFile" method="post" enctype="multipart/form-data">
+        <div th:if="${param.error}!= null" class="alert alert-danger alert-dismissible" role="alert" id="liveAlert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <strong>Warning!</strong> Incorrect file. Try again...
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="row">
+            <label class="label text-light h2" for="opq">Plik Open pick quantity (OPQ_PG):</label></div>
+        <div class="input-group">
+            <input type="file" class="form-control" accept=".xls,.xlsx" id="opq" name="opq" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+            <input class="btn btn-success" type="submit" id="inputGroupFileAddon04" value="NEXT" name="submit">
+        </div>
+    </form>
+</section>
 </body>
 </html>
