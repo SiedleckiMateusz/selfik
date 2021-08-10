@@ -44,8 +44,8 @@ public class IkeaProduct {
         return Math.max(min, 0);
     }
 
-    public double l23OrderPQ() {
-        return (double) l23Order() / palQty;
+    public float l23OrderPQ() {
+        return (float) l23Order() / palQty;
     }
 
     public int l23OrderToFullPal() {

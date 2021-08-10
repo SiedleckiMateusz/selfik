@@ -33,6 +33,7 @@ public class PickingInfo {
             }
         }else {
             noInfo+=pick.getPickqty();
+            qtyReservationInCps+=pick.getPickqty();
         }
     }
 
