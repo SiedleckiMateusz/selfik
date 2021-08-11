@@ -57,18 +57,18 @@ public class ProcessController {
     }
 
 
-    @GetMapping("process")
+//    @GetMapping("process")
     public String process() {
         if (prenotProcessFlag) {
-            return "redirect:/prenotification";
+            return "redirect:/prenotification-process";
         }
         if (morningProcessFlag) {
-            return "redirect:/morning-order";
+            return "redirect:/morning-order-process";
         }
         return "redirect:/";
     }
 
-    @GetMapping("morning-order")
+    @GetMapping("morning-order-process")
     public String morningOrderProcess() {
         morningProcessFlag = true;
         if (!SLM0003IsOkFlag) {
@@ -88,17 +88,17 @@ public class ProcessController {
         return "redirect:/generate-file";
     }
 
-    @GetMapping("prenotification")
+    @GetMapping("prenotification-process")
     public String prenotOrderProcess() {
         prenotProcessFlag = true;
         if (!SLM0003IsOkFlag) {
-            return "redirect:/slm0003Form";
+            return slm0003Form();
         }
         if (!opqIsOkFlag) {
-            return "redirect:/opqForm";
+            return opqForm();
         }
         if (!prenotIsOkFlag) {
-            return "redirect:/prenotForm";
+            return prenotForm();
         }
         String fileName = "Prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
@@ -145,13 +145,11 @@ public class ProcessController {
         log.info("Go to SLM0003 formula");
         return "form/slm0003Form";
     }
-
     @GetMapping("opqForm")
     public String opqForm() {
         log.info("Go to OPQ formula");
         return "form/opqForm";
     }
-
     @GetMapping("prenotForm")
     public String prenotForm() {
         log.info("Go to PRENOT formula");
@@ -170,7 +168,7 @@ public class ProcessController {
             return "redirect:/slm0003Form?error";
         }
 
-        return "redirect:/process";
+        return process();
     }
 
     @PostMapping("opqFile")
@@ -185,7 +183,7 @@ public class ProcessController {
             return "redirect:/opqForm?error";
         }
 
-        return "redirect:/process";
+        return process();
     }
 
     @PostMapping("prenotFile")
@@ -199,7 +197,7 @@ public class ProcessController {
         } catch (IOException e) {
             return "redirect:/prenotForm?error";
         }
-        return "redirect:/process";
+        return process();
     }
 
     private ResponseEntity<ByteArrayResource> sendReadyFile(XlsxFileWriter result) throws IOException {
