@@ -175,7 +175,7 @@ public class ProcessController {
     public String processOpq(@RequestAttribute("opq") MultipartFile opq) {
         try {
             log.info("Recive OPQ file");
-            ikeaProductMap = service.processOpq(opq, ikeaProductMap);
+            ikeaProductMap = service.processOpq(opq, ikeaProductMap,getDaysToPick());
             log.info("Processed OPQ file");
             opqIsOkFlag = true;
             log.info("Set OpqFlag on true");
@@ -184,6 +184,16 @@ public class ProcessController {
         }
 
         return process();
+    }
+
+    private int getDaysToPick() {
+        if (prenotProcessFlag){
+            return  2;
+        }
+        if (morningProcessFlag){
+            return  1;
+        }
+        throw new IllegalStateException("prenot and morning Process flags are false! I don't know how many days to pick choose");
     }
 
     @PostMapping("prenotFile")

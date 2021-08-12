@@ -16,7 +16,7 @@ import java.util.*;
 
 public class OpqMapper {
 
-    public static Map<String, IkeaProduct> processPickingProduct(Sheet sheet, Map<String, IkeaProduct> ikeaProductMap) {
+    public static Map<String, IkeaProduct> processPickingProduct(Sheet sheet, Map<String, IkeaProduct> ikeaProductMap,int daysToPick) {
         int rows = sheet.getLastRowNum() - sheet.getFirstRowNum();
         for (int i = rows; i > Constants.OPQ_ROW_INDEX; i--) {
             Row row = sheet.getRow(i);
@@ -25,7 +25,7 @@ public class OpqMapper {
                 if (ikeaProductMap.containsKey(numberId)) {
                     IkeaProduct ikeaProduct = ikeaProductMap.get(numberId);
                     if (ikeaProduct.getPickingInfo()==null) {
-                        ikeaProduct.setPickingInfo(new PickingInfo(mapToPick(row)));
+                        ikeaProduct.setPickingInfo(new PickingInfo(mapToPick(row), daysToPick));
                     } else {
                         ikeaProduct.getPickingInfo().addPick(mapToPick(row));
                     }

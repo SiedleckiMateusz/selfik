@@ -22,7 +22,7 @@ class IkeaProductTest {
                 .sgf(250)
                 .prenotBuffer(0)
                 .prenotSales(0)
-                .pickingInfo(new PickingInfo(new Pick(5, LocalDate.now().plusDays(2), null)))
+                .pickingInfo(new PickingInfo(new Pick(5, LocalDate.now().plusDays(2), null), 1))
                 .build();
         //then
         assertEquals(1,product.l23OrderToFullPal());
@@ -39,7 +39,7 @@ class IkeaProductTest {
                 .sgf(230)
                 .prenotBuffer(0)
                 .prenotSales(0)
-                .pickingInfo(new PickingInfo(new Pick(5, LocalDate.now().plusDays(2), null)))
+                .pickingInfo(new PickingInfo(new Pick(5, LocalDate.now().plusDays(2), null), 1))
                 .build();
         //then
         assertEquals(0,product.l23OrderToFullPal());
@@ -56,7 +56,7 @@ class IkeaProductTest {
                 .sgf(300)
                 .prenotBuffer(0)
                 .prenotSales(0)
-                .pickingInfo(new PickingInfo(new Pick(5, LocalDate.now().plusDays(2), null)))
+                .pickingInfo(new PickingInfo(new Pick(5, LocalDate.now().plusDays(2), null), 1))
                 .build();
         //then
         assertEquals(2,product.l23OrderToFullPal());
@@ -73,7 +73,7 @@ class IkeaProductTest {
                 .sgf(300)
                 .prenotBuffer(0)
                 .prenotSales(49)
-                .pickingInfo(new PickingInfo(new Pick(5, LocalDate.now().plusDays(2), null)))
+                .pickingInfo(new PickingInfo(new Pick(5, LocalDate.now().plusDays(2), null), 1))
                 .build();
         //then
         assertEquals(1,product.l23OrderToFullPal());

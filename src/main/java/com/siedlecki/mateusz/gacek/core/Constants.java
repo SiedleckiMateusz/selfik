@@ -23,7 +23,6 @@ public class Constants {
     public static String OPQ_SHEET_NAME = "Sheet";
     public static int OPQ_ROW_INDEX = 0;
     public static Set<Column> OPQ_COLUMNS = new HashSet<>();
-    public static int OPQ_DAYS_TO_PICK = 1;
 
     public static String FPS_SERVICE_PROVIDER = "32081";
     public static LocalTime CPS_CUT_OF_TIME = LocalTime.of(16,0);

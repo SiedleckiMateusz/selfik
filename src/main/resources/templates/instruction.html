@@ -6,7 +6,34 @@
 </head>
 <body>
 <section>
-    <h3 class="text-light">Tu będzie instrukcja, ale jeszcze tego nie ogarnąłem. Sorki...</h3>
+    <h2 class="text-light m-2">Generowanie listy do pliku Excel - Instrukcja</h2>
+    <div class="text-light m-1 p-3" style="background-color: rgba(240,248,255,0.18)">
+        <div class="row">
+            <div class="col">
+                <ol class="list-group">
+                    <li class="list-cell m-1">Uruchom prgram GADDxl MHS. Powinno wyświetlić się okienko logowania. Jeśli
+                        jest tam Twój login to klikasz OK. Jeśli są tam jakieś domyślne wartości np. „user”,”default” to
+                        znaczy że nie masz dostępów. Skontaktuj się z przełożonym.
+                    </li>
+                    <li class="list-cell m-1 my-lg-4">Po udanym logowaniu zobaczysz okno z listami. Nazwy list umieszczone są po
+                        lewej stronie. Znajdź listę, której potrzebujesz.
+                    </li>
+                    <li class="list-cell m-1 my-lg-4" style="color: deepskyblue">Wybierz listę klikając na nią.</li>
+                    <li class="list-cell m-1 my-lg-4" style="color: #ff4b4b">Kliknij „Execute”, aby wygenerować listę.</li>
+                    <li class="list-cell m-1 my-lg-4" style="color: greenyellow">Jak lista się wygeneruje, kliknij „Display Table”.</li>
+                    <div class="alert alert-warning my-lg-4" role="alert">Uwaga! Generowanie listy używając Export to Excel jest nieobsługiwane przeze mnie ☹</div>
+                    <li class="list-cell m-1 my-lg-4">Wybierz Utility -> Export Data in View to… -> Save View Data as XLSX</li>
+                    <li class="list-cell m-1 my-lg-4">Zapisz w miejscu w którym będziesz w stanie odnaleźć plik</li>
+                </ol>
+            </div>
+            <div class="col-lg-8">
+                <img th:src="@{/img/download_list1.jpg}" class="img-fluid m-2" alt="...">
+                <img th:src="@{/img/download_list2.jpg}" class="img-fluid m-2" alt="...">
+            </div>
+        </div>
+
+
+    </div>
 </section>
 
 </body>

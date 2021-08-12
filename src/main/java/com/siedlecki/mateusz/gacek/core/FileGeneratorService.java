@@ -45,9 +45,9 @@ public class FileGeneratorService {
         return PrenotMapper.mapToPrenotProductMap(prenotSheet);
     }
 
-    public Map<String,IkeaProduct> processOpq(MultipartFile opqFile,Map<String,IkeaProduct>ikeaProductMap) throws IOException {
+    public Map<String,IkeaProduct> processOpq(MultipartFile opqFile,Map<String,IkeaProduct>ikeaProductMap,int daysToPick) throws IOException {
         Sheet opqSheet = opqReader.getSheetFromFile(opqFile);
-        return OpqMapper.processPickingProduct(opqSheet,ikeaProductMap);
+        return OpqMapper.processPickingProduct(opqSheet,ikeaProductMap,daysToPick);
     }
 
     public Result getProductsToOrderAndPrepare(Map<String,IkeaProduct> ikeaProductMap){

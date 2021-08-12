@@ -17,7 +17,7 @@ class PickingInfoTest {
         //given
         Pick pick = new Pick(5,null,null);
         //when
-        PickingInfo pickingInfo = new PickingInfo(pick);
+        PickingInfo pickingInfo = new PickingInfo(pick, 1);
         //then
         assertEquals(5,pickingInfo.getNoInfo());
         assertEquals(0,pickingInfo.getQtyAfterDay());
@@ -32,7 +32,7 @@ class PickingInfoTest {
         //given
         Pick pick = new Pick(5, LocalDate.now(), LocalTime.of(16,0));
         //when
-        PickingInfo pickingInfo = new PickingInfo(pick);
+        PickingInfo pickingInfo = new PickingInfo(pick, 1);
         //then
         assertEquals(0,pickingInfo.getNoInfo());
         assertEquals(0,pickingInfo.getQtyAfterDay());
@@ -47,7 +47,7 @@ class PickingInfoTest {
         //given
         Pick pick = new Pick(5, LocalDate.now().plusDays(2), LocalTime.of(12,0));
         //when
-        PickingInfo pickingInfo = new PickingInfo(pick);
+        PickingInfo pickingInfo = new PickingInfo(pick, 1);
         //then
         assertEquals(0,pickingInfo.getNoInfo());
         assertEquals(5,pickingInfo.getQtyAfterDay());
