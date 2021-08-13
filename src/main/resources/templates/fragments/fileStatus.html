@@ -6,7 +6,7 @@
 
 </head>
 <body>
-<div th:fragment="fileStatus" class="col-lg-3 col-md-4 col-sm-4">
+<div th:fragment="status" class="col-lg-3 col-md-4 col-sm-4">
     <ul class="list-group">
         <li th:class="'list-group-item '+ ${(flags!=null && flags.isSLM0003IsOkFlag())?'list-group-item-success':'list-group-item-light'}">
             SLM0003
