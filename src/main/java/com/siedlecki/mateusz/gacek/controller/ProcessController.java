@@ -53,8 +53,6 @@ public class ProcessController {
         return "index";
     }
 
-
-//    @GetMapping("process")
     public String process() {
         if (flags.isPrenotProcessFlag()) {
             return "redirect:/prenotification-process";
@@ -84,7 +82,6 @@ public class ProcessController {
         }
         return "redirect:/generate-file";
     }
-
     @GetMapping("prenotification-process")
     public String prenotOrderProcess() {
         flags.setPrenotProcessFlag(true);
@@ -106,30 +103,6 @@ public class ProcessController {
         }
 
         return "redirect:/generate-file";
-    }
-
-    private void reset() {
-        log.info("Restarting params");
-        flags.reset();
-
-        ikeaProductMap = null;
-        prenotProductMap = null;
-        fileWriter = null;
-    }
-
-    @GetMapping("generate-file")
-    public ResponseEntity<?> generateFile() {
-        try {
-            if (fileWriter != null && fileWriter.getWorkbook() != null) {
-                return sendReadyFile(fileWriter);
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            return ResponseEntity.of(Optional.of(e.getMessage()));
-        } finally {
-            reset();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @GetMapping("slm0003-form")
@@ -165,7 +138,6 @@ public class ProcessController {
 
         return process();
     }
-
     @PostMapping("opq-file")
     public String processOpq(@RequestAttribute("opq") MultipartFile opq) {
         try {
@@ -180,17 +152,6 @@ public class ProcessController {
 
         return process();
     }
-
-    private int getDaysToPick() {
-        if (flags.isPrenotProcessFlag()){
-            return  2;
-        }
-        if (flags.isMorningProcessFlag()){
-            return  1;
-        }
-        throw new IllegalStateException("prenot and morning Process flags are false! I don't know how many days to pick choose");
-    }
-
     @PostMapping("prenot-file")
     public String processPrenot(@RequestAttribute("prenot") MultipartFile prenot) {
         try {
@@ -203,6 +164,40 @@ public class ProcessController {
             return "redirect:/prenot-form?error";
         }
         return process();
+    }
+
+    @GetMapping("generate-file")
+    public ResponseEntity<?> generateFile() {
+        try {
+            if (fileWriter != null && fileWriter.getWorkbook() != null) {
+                return sendReadyFile(fileWriter);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.of(Optional.of(e.getMessage()));
+        } finally {
+            reset();
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    private void reset() {
+        log.info("Restarting params");
+        flags.reset();
+
+        ikeaProductMap = null;
+        prenotProductMap = null;
+        fileWriter = null;
+    }
+
+    private int getDaysToPick() {
+        if (flags.isPrenotProcessFlag()){
+            return  2;
+        }
+        if (flags.isMorningProcessFlag()){
+            return  1;
+        }
+        throw new IllegalStateException("prenot and morning Process flags are false! I don't know how many days to pick choose");
     }
 
     private ResponseEntity<ByteArrayResource> sendReadyFile(XlsxFileWriter result) throws IOException {

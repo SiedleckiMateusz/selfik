@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-</head>
-<body>
-<div th:fragment="status" class="col-lg-3 col-md-4 col-sm-4">
+<div th:fragment="status(flags)" class="col-lg-3 col-md-4 col-sm-4">
     <ul class="list-group">
         <li th:class="'list-group-item '+ ${(flags!=null && flags.isSLM0003IsOkFlag())?'list-group-item-success':'list-group-item-light'}">
             SLM0003
@@ -19,8 +11,5 @@
             th:class="'list-group-item '+ ${(flags!=null && flags.isPrenotIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
             PRENOTYFIKACJE
         </li>
-
     </ul>
 </div>
-</body>
-</html>
