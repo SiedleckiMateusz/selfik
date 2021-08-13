@@ -18,7 +18,7 @@ public class SheetContentGenerator {
     public static String[] ALL_PARAM_COLUMNS = new String[]{
             "SPECSHOP","RANGE GR","ART NR","ART NAME","SLID","FCST","ASSQ","AVG SALES","PQ","AVAL STOCK",
             "SGF","PRENOT BUFFER","BUFFER & SGF","BUFFER & SGF [PQ]","VOL","PRENOT SALES","PRENOT SALES [PQ]",
-            "ON SALES PLACES","FREE SPACE","L23 QTY","L23[PQ]","L23 [FULL PQ]","FREE SPACE AFTER ORD"
+            "ON SALES PLACES","FREE SPACE","L23 QTY","L23[PQ]","L23 [FULL PQ]","FREE SPACE AFTER ORD","RESERVATIONS"
     };
 
     public static List<String[]> toPrepareSheetValues(List<IkeaProduct> products){
@@ -68,7 +68,7 @@ public class SheetContentGenerator {
                     product.getSgf().toString(),
                     String.valueOf(product.getPrenotBuffer()),
                     String.valueOf(product.bufferAndSgf()),
-                    String.valueOf(product.bufferAndSgfPQ()),
+                    String.format("%.2f", product.bufferAndSgfPQ()),
                     String.format("%.2f", product.getVolume()),
                     String.valueOf(product.getPrenotSales()),
                     String.format("%.2f", product.prenotSalesPQ()),
@@ -77,7 +77,8 @@ public class SheetContentGenerator {
                     String.valueOf(product.l23Order()),
                     String.format("%.2f", product.l23OrderPQ()),
                     String.valueOf(product.l23OrderToFullPal()),
-                    String.valueOf(product.freeSpaceAfterOrder())
+                    String.valueOf(product.freeSpaceAfterOrder()),
+                    String.valueOf(product.getPickingInfo()!=null?product.getPickingInfo().getQtyToOrder():"0")
             });
         }
         return result;

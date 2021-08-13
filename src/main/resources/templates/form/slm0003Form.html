@@ -6,7 +6,7 @@
 </head>
 <body>
 <section>
-    <form action="/slm0003File" method="post" enctype="multipart/form-data">
+    <form action="/slm0003-file" method="post" enctype="multipart/form-data">
         <div th:if="${param.error}!= null" class="alert alert-danger alert-dismissible" role="alert" id="liveAlert">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                  class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
@@ -23,21 +23,38 @@
             <input class="btn btn-success" type="submit" id="inputGroupFileAddon04" value="DALEJ" name="submit">
         </div>
     </form>
-    <div class="card m-5">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img th:src="@{/img/slm0003.JPG}" class="img-fluid rounded-start" alt="...">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Wrzuć listę SLM0003_PG z katalogu Sales Location Management Postgres</h5>
-                    <p class="card-text">Pobierz aktualną listę i wczytaj ją powyżej. Pamiętaj o poprawnym generowaniu listy. Jeśli nie wiesz jak to zrobić kliknij <a th:href="instruction">tutaj</a></p>
-                    <div class="alert alert-warning" role="alert">Uwaga! Istnieje również lista SLM0003_DASH_PG, której niestety nie obsługuję</div>
-                    <p class="card-text"><small class="text-muted">Jak wrzucisz listę i klikniesz DALEJ, poczekaj cierpliwie aż to przetrawię</small></p>
+    <div class="row my-5">
+        <div th:replace="/fragments/fileStatus :: fileStatus"></div>
+        <div class="col">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img th:src="@{/img/slm0003.JPG}" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Wrzuć listę SLM0003_PG z katalogu Sales Location Management
+                                Postgres</h5>
+                            <p class="card-text">Pobierz aktualną listę i wczytaj ją powyżej. Pamiętaj o poprawnym
+                                generowaniu listy. Jeśli nie wiesz jak to zrobić kliknij <a
+                                        th:href="instruction">tutaj</a></p>
+                            <div class="alert alert-danger" role="alert">Uwaga! Przy generowaniu wybierz DIV tylko SF,
+                                ponieważ plik ze wszystkimi dywizjami jest za duży.
+                            </div>
+                            <p class="card-text">Tej listę potrzebuję, aby sprawdzić aktualne parametry artykułów na
+                                magazynie</p>
+                            <div class="alert alert-warning" role="alert">Uwaga! Istnieje również lista SLM0003_DASH_PG,
+                                której niestety nie obsługuję
+                            </div>
+                            <p class="card-text"><small class="text-muted">Jak wrzucisz listę i klikniesz DALEJ,
+                                poczekaj cierpliwie aż to przetrawię</small></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </section>
 
 </body>

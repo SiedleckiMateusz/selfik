@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -33,18 +34,14 @@ public class ProcessController {
     private Map<String, PrenotProduct> prenotProductMap;
     private XlsxFileWriter fileWriter;
 
-    private boolean SLM0003IsOkFlag;
-    private boolean prenotIsOkFlag;
-    private boolean opqIsOkFlag;
-
-    private boolean prenotProcessFlag;
-    private boolean morningProcessFlag;
+    private final ProcessFlags flags;
 
     private final FileGeneratorService service;
 
     private static final Logger log = LoggerFactory.getLogger(ProcessController.class);
 
-    public ProcessController(FileGeneratorService service) {
+    public ProcessController( FileGeneratorService service) {
+        this.flags = new ProcessFlags();
         this.service = service;
     }
 
@@ -59,10 +56,10 @@ public class ProcessController {
 
 //    @GetMapping("process")
     public String process() {
-        if (prenotProcessFlag) {
+        if (flags.isPrenotProcessFlag()) {
             return "redirect:/prenotification-process";
         }
-        if (morningProcessFlag) {
+        if (flags.isMorningProcessFlag()) {
             return "redirect:/morning-order-process";
         }
         return "redirect:/";
@@ -70,12 +67,12 @@ public class ProcessController {
 
     @GetMapping("morning-order-process")
     public String morningOrderProcess() {
-        morningProcessFlag = true;
-        if (!SLM0003IsOkFlag) {
-            return "form/slm0003Form";
+        flags.setMorningProcessFlag(true);
+        if (!flags.isSLM0003IsOkFlag()) {
+            return "redirect:/slm0003-form";
         }
-        if (!opqIsOkFlag) {
-            return "form/opqForm";
+        if (!flags.isOpqIsOkFlag()) {
+            return "redirect:/opq-form";
         }
 
         String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
@@ -90,15 +87,15 @@ public class ProcessController {
 
     @GetMapping("prenotification-process")
     public String prenotOrderProcess() {
-        prenotProcessFlag = true;
-        if (!SLM0003IsOkFlag) {
-            return slm0003Form();
+        flags.setPrenotProcessFlag(true);
+        if (!flags.isSLM0003IsOkFlag()) {
+            return "redirect:/slm0003-form";
         }
-        if (!opqIsOkFlag) {
-            return opqForm();
+        if (!flags.isOpqIsOkFlag()) {
+            return "redirect:/opq-form";
         }
-        if (!prenotIsOkFlag) {
-            return prenotForm();
+        if (!flags.isPrenotIsOkFlag()) {
+            return "redirect:/prenot-form";
         }
         String fileName = "Prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
@@ -113,16 +110,11 @@ public class ProcessController {
 
     private void reset() {
         log.info("Restarting params");
-        SLM0003IsOkFlag = false;
-        opqIsOkFlag = false;
-        prenotIsOkFlag = false;
+        flags.reset();
 
         ikeaProductMap = null;
         prenotProductMap = null;
         fileWriter = null;
-
-        prenotProcessFlag = false;
-        morningProcessFlag = false;
     }
 
     @GetMapping("generate-file")
@@ -140,72 +132,75 @@ public class ProcessController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @GetMapping("slm0003Form")
-    public String slm0003Form() {
+    @GetMapping("slm0003-form")
+    public String slm0003Form(Model model) {
+        model.addAttribute("flags",flags);
         log.info("Go to SLM0003 formula");
         return "form/slm0003Form";
     }
-    @GetMapping("opqForm")
-    public String opqForm() {
+    @GetMapping("opq-form")
+    public String opqForm(Model model) {
+        model.addAttribute("flags",flags);
         log.info("Go to OPQ formula");
         return "form/opqForm";
     }
-    @GetMapping("prenotForm")
-    public String prenotForm() {
+    @GetMapping("prenot-form")
+    public String prenotForm(Model model){
+        model.addAttribute("flags",flags);
         log.info("Go to PRENOT formula");
         return "form/prenotForm";
     }
 
-    @PostMapping("slm0003File")
+    @PostMapping("slm0003-file")
     public String processSLM0003(@RequestAttribute("slm0003") MultipartFile slm0003) {
         try {
             log.info("Recive slm0003 file");
             ikeaProductMap = service.processSlm0003file(slm0003);
             log.info("Processed slm0003 file");
-            SLM0003IsOkFlag = true;
+            flags.setSLM0003IsOkFlag(true);
             log.info("Set slm0003Flag on true");
         } catch (IOException e) {
-            return "redirect:/slm0003Form?error";
+            return "redirect:/slm0003-form?error";
         }
 
         return process();
     }
 
-    @PostMapping("opqFile")
+    @PostMapping("opq-file")
     public String processOpq(@RequestAttribute("opq") MultipartFile opq) {
         try {
             log.info("Recive OPQ file");
             ikeaProductMap = service.processOpq(opq, ikeaProductMap,getDaysToPick());
             log.info("Processed OPQ file");
-            opqIsOkFlag = true;
+            flags.setOpqIsOkFlag(true);
             log.info("Set OpqFlag on true");
         } catch (IOException e) {
-            return "redirect:/opqForm?error";
+            return "redirect:/opq-form?error";
         }
 
         return process();
     }
 
     private int getDaysToPick() {
-        if (prenotProcessFlag){
+        if (flags.isPrenotProcessFlag()){
             return  2;
         }
-        if (morningProcessFlag){
+        if (flags.isMorningProcessFlag()){
             return  1;
         }
         throw new IllegalStateException("prenot and morning Process flags are false! I don't know how many days to pick choose");
     }
 
-    @PostMapping("prenotFile")
+    @PostMapping("prenot-file")
     public String processPrenot(@RequestAttribute("prenot") MultipartFile prenot) {
         try {
             log.info("Recive Prenot file");
             prenotProductMap = service.processPrenotFile(prenot);
             log.info("Processed Prenot file");
-            prenotIsOkFlag = true;
+            flags.setPrenotIsOkFlag(true);
             log.info("Set prenotFlag on true");
         } catch (IOException e) {
-            return "redirect:/prenotForm?error";
+            return "redirect:/prenot-form?error";
         }
         return process();
     }

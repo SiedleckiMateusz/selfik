@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<div th:fragment="fileStatus" class="col-lg-3 col-md-4 col-sm-4">
+    <ul class="list-group">
+        <li th:class="'list-group-item '+ ${(flags!=null && flags.isSLM0003IsOkFlag())?'list-group-item-success':'list-group-item-light'}">
+            SLM0003
+        </li>
+        <li th:class="'list-group-item '+ ${(flags!=null && flags.isOpqIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
+            OPQ
+        </li>
+
+        <li th:if="${flags!=null && flags.isPrenotProcessFlag()}"
+            th:class="'list-group-item '+ ${(flags!=null && flags.isPrenotIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
+            PRENOTYFIKACJE
+        </li>
+
+    </ul>
+</div>
+</body>
+</html>
