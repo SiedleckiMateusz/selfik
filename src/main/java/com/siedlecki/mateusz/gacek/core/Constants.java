@@ -79,4 +79,8 @@ public class Constants {
                 "FREE SPACE AFTER ORDER"
         };
     }
+
+    public static String convertNumber(double num){
+        return String.format("%.2f", num);
+    }
 }

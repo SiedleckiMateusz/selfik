@@ -1,5 +1,6 @@
 package com.siedlecki.mateusz.gacek.core.model;
 
+import com.siedlecki.mateusz.gacek.core.Constants;
 import com.siedlecki.mateusz.gacek.core.model.opq.PickingInfo;
 import lombok.Builder;
 import lombok.Getter;
@@ -66,6 +67,10 @@ public class IkeaProduct {
 
     public double prenotSalesPQ() {
         return (double) prenotSales / palQty;
+    }
+
+    public String prenotSalesPQString() {
+        return Constants.convertNumber(prenotSalesPQ());
     }
 
     public double bufferAndSgfPQ() {

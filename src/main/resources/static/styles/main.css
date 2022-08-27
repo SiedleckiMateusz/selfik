@@ -1,0 +1,25 @@
+@media print {
+    .noPrint{
+        display:none;
+    }
+}
+h1{
+    color:#f6f6;
+}
+
+.myTable{
+    background-color: rgba(240, 248, 255, 0.75);
+    color: black;
+    width: 100%;
+    border-collapse: collapse;
+}
+table,tr,td {
+    border-bottom: 1px solid black;
+}
+th {
+    background-color: #323434;
+    color: white;
+}
+tr:hover {
+    background-color: rgba(154, 179, 211, 0.47);
+}

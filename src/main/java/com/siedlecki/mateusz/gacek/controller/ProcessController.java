@@ -33,6 +33,7 @@ public class ProcessController {
     private Map<String, IkeaProduct> ikeaProductMap;
     private Map<String, PrenotProduct> prenotProductMap;
     private XlsxFileWriter fileWriter;
+    private Result result;
 
     private final ProcessFlags flags;
 
@@ -40,7 +41,7 @@ public class ProcessController {
 
     private static final Logger log = LoggerFactory.getLogger(ProcessController.class);
 
-    public ProcessController( FileGeneratorService service) {
+    public ProcessController(FileGeneratorService service) {
         this.flags = new ProcessFlags();
         this.service = service;
     }
@@ -51,6 +52,12 @@ public class ProcessController {
         reset();
         log.info("Reset files");
         return "index";
+    }
+
+    @GetMapping("summary")
+    public String printing(Model model){
+        model.addAttribute("toPrepare",result.getToPrepare());
+        return "summary";
     }
 
     public String process() {
@@ -75,13 +82,14 @@ public class ProcessController {
 
         String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
-            Result result = service.getProductsToOrderAndPrepare(ikeaProductMap);
-            fileWriter = service.generateXlsxFile(result,fileName);
+            result = service.getProductsToOrderAndPrepare(ikeaProductMap);
+            fileWriter = service.generateXlsxFile(result, fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "redirect:/generate-file";
+        return "redirect:/summary";
     }
+
     @GetMapping("prenotification-process")
     public String prenotOrderProcess() {
         flags.setPrenotProcessFlag(true);
@@ -96,32 +104,43 @@ public class ProcessController {
         }
         String fileName = "Prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
-            Result result = service.getProductsToOrderAndPrepare(ikeaProductMap, prenotProductMap);
-            fileWriter = service.generateXlsxFile(result,fileName);
+            result = service.getProductsToOrderAndPrepare(ikeaProductMap, prenotProductMap);
+            fileWriter = service.generateXlsxFile(result, fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return "redirect:/generate-file";
+        return "redirect:/summary";
     }
 
     @GetMapping("slm0003-form")
     public String slm0003Form(Model model) {
-        model.addAttribute("flags",flags);
-        log.info("Go to SLM0003 formula");
-        return "form/slm0003Form";
+        if (flags.isPrenotProcessFlag() || flags.isMorningProcessFlag()) {
+            model.addAttribute("flags", flags);
+            log.info("Go to SLM0003 formula");
+            return "form/slm0003Form";
+        }
+        return "redirect:/";
     }
+
     @GetMapping("opq-form")
     public String opqForm(Model model) {
-        model.addAttribute("flags",flags);
-        log.info("Go to OPQ formula");
-        return "form/opqForm";
+        if (flags.isPrenotProcessFlag() || flags.isMorningProcessFlag()) {
+            model.addAttribute("flags", flags);
+            log.info("Go to OPQ formula");
+            return "form/opqForm";
+        }
+        return "redirect:/";
     }
+
     @GetMapping("prenot-form")
-    public String prenotForm(Model model){
-        model.addAttribute("flags",flags);
-        log.info("Go to PRENOT formula");
-        return "form/prenotForm";
+    public String prenotForm(Model model) {
+        if (flags.isPrenotProcessFlag()) {
+            model.addAttribute("flags", flags);
+            log.info("Go to PRENOT formula");
+            return "form/prenotForm";
+        }
+        return "redirect:/";
     }
 
     @PostMapping("slm0003-file")
@@ -138,11 +157,12 @@ public class ProcessController {
 
         return process();
     }
+
     @PostMapping("opq-file")
     public String processOpq(@RequestAttribute("opq") MultipartFile opq) {
         try {
             log.info("Recive OPQ file");
-            ikeaProductMap = service.processOpq(opq, ikeaProductMap,getDaysToPick());
+            ikeaProductMap = service.processOpq(opq, ikeaProductMap, getDaysToPick());
             log.info("Processed OPQ file");
             flags.setOpqIsOkFlag(true);
             log.info("Set OpqFlag on true");
@@ -152,6 +172,7 @@ public class ProcessController {
 
         return process();
     }
+
     @PostMapping("prenot-file")
     public String processPrenot(@RequestAttribute("prenot") MultipartFile prenot) {
         try {
@@ -191,11 +212,11 @@ public class ProcessController {
     }
 
     private int getDaysToPick() {
-        if (flags.isPrenotProcessFlag()){
-            return  2;
+        if (flags.isPrenotProcessFlag()) {
+            return 2;
         }
-        if (flags.isMorningProcessFlag()){
-            return  1;
+        if (flags.isMorningProcessFlag()) {
+            return 1;
         }
         throw new IllegalStateException("prenot and morning Process flags are false! I don't know how many days to pick choose");
     }
