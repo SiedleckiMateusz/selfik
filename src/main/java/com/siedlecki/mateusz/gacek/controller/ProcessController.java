@@ -3,8 +3,6 @@ package com.siedlecki.mateusz.gacek.controller;
 import com.siedlecki.mateusz.gacek.core.FileGeneratorService;
 import com.siedlecki.mateusz.gacek.core.ProductsContainer;
 import com.siedlecki.mateusz.gacek.core.XlsxFileWriter;
-import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
-import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
 import com.siedlecki.mateusz.gacek.core.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
