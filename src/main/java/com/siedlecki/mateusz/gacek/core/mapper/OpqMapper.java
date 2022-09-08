@@ -21,9 +21,9 @@ public class OpqMapper {
         for (int i = rows; i > Constants.OPQ_ROW_INDEX; i--) {
             Row row = sheet.getRow(i);
             if (!ignoreRow(row)) {
-                String numberId = row.getCell(2).getStringCellValue().trim();
-                if (ikeaProductMap.containsKey(numberId)) {
-                    IkeaProduct ikeaProduct = ikeaProductMap.get(numberId);
+                String productId = row.getCell(2).getStringCellValue().trim();
+                if (ikeaProductMap.containsKey(productId)) {
+                    IkeaProduct ikeaProduct = ikeaProductMap.get(productId);
                     if (ikeaProduct.getPickingInfo()==null) {
                         ikeaProduct.setPickingInfo(new PickingInfo(mapToPick(row), daysToPick));
                     } else {
