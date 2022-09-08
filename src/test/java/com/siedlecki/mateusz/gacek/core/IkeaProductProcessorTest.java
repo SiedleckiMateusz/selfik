@@ -1,6 +1,7 @@
 package com.siedlecki.mateusz.gacek.core;
 
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
+import com.siedlecki.mateusz.gacek.core.model.Location;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,11 @@ class IkeaProductProcessorTest {
                 .palQty(50)
                 .availableStock(300)
                 .sgf(200)
-                .locations(new TreeSet<>(Arrays.asList("101000","101110")))
+                .locations(new TreeSet<>(
+                        Arrays.asList(
+                                Location.builder().main(true).name("101000").build(),
+                                Location.builder().name("101110").build()
+                        )))
                 .prenotSales(50)
                 .build());
 
@@ -64,13 +69,13 @@ class IkeaProductProcessorTest {
                 .assq(70)
                 .palQty(40)
                 .availableStock(300)
-                .locations(new TreeSet<String>(Collections.singleton("101000")))
+                .locations(new TreeSet<>(Collections.singleton(Location.builder().name("101000").main(true).build())))
                 .sgf(280)
                 .prenotSales(0)
                 .build());
         //when
         List<IkeaProduct> productsToOrder = cut.getProductsToOrder(products);
-        List<IkeaProduct> result = cut.getProductListToPrepare(productsToOrder);
+        List<IkeaProduct> result = cut.getProductsToPreparePlaces(productsToOrder);
         //then
         assertEquals(2, products.size());
         assertFalse(result.isEmpty());
