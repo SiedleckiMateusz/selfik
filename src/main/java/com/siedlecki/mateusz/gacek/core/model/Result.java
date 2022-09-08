@@ -14,9 +14,9 @@ public class Result {
     private List<IkeaProduct> toPrepare;
 
     public Result(List<IkeaProduct> all, List<IkeaProduct> toOrder, List<IkeaProduct> toPrepare) {
-        this.all = all.stream().sorted(Comparator.comparing(o -> o.getLocations().first())).collect(Collectors.toList());
-        this.toOrder = toOrder.stream().sorted(Comparator.comparing(o -> o.getLocations().first())).collect(Collectors.toList());
-        this.toPrepare = toPrepare.stream().sorted(Comparator.comparing(o -> o.getLocations().first())).collect(Collectors.toList());
+        this.all = all.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
+        this.toOrder = toOrder.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
+        this.toPrepare = toPrepare.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
     }
 
     public void addToPrepare(List<IkeaProduct> toPrepare) {
