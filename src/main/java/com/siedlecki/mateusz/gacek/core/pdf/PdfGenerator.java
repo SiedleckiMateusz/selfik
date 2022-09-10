@@ -61,7 +61,7 @@ public class PdfGenerator {
             values.add(p.getId());
             values.add(p.getName());
             values.add(p.locationsToString());
-            values.add(String.valueOf((double)p.l23OrderToFullPal()+p.prenotSalesPQ()));
+            values.add(String.format("%.2f",(double)p.l23OrderToFullPal()+p.prenotSalesPQ()));
             values.add(p.getStatus().getOpis());
             filRow(table,values);
         }
