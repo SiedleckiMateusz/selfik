@@ -1,9 +1,14 @@
 package com.siedlecki.mateusz.gacek.controller;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.siedlecki.mateusz.gacek.core.FileGeneratorService;
 import com.siedlecki.mateusz.gacek.core.ProductsContainer;
 import com.siedlecki.mateusz.gacek.core.XlsxFileWriter;
 import com.siedlecki.mateusz.gacek.core.model.Result;
+import com.siedlecki.mateusz.gacek.core.pdf.PdfGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -204,6 +209,38 @@ public class ProcessController {
             return ResponseEntity.of(Optional.of(e.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @GetMapping("generate-pdf")
+    public String checkIfCanGeneratePdfFile(){
+        if (flags.isActiveAnyProcess()){
+            return "redirect:/generate-pdf-file";
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("generate-pdf-file")
+    public ResponseEntity<?> printing() {
+        Document document = new Document(PageSize.A4.rotate(),20,20,20,20);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, outputStream);
+            document.open();
+            PdfGenerator generator = new PdfGenerator(document);
+            generator.generate(result);
+            document.close();
+        } catch (DocumentException e) {
+            System.err.println(e.getMessage());
+            reset();
+            return ResponseEntity.of(Optional.of(e.getMessage()));
+        }
+
+        String fileName = "Selfik " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".pdf";
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName);
+        return new ResponseEntity<>(new ByteArrayResource(outputStream.toByteArray()),
+                header, HttpStatus.CREATED);
     }
 
     private void reset() {
