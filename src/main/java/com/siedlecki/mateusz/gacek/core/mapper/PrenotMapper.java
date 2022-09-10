@@ -5,9 +5,7 @@ import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PrenotMapper {
@@ -18,12 +16,12 @@ public class PrenotMapper {
         for (int i = rows; i > Constants.PRENOT_ROW_INDEX; i--) {
             Row row = sheet.getRow(i);
             PrenotProduct product = mapToProduct(row);
-            if (prenotMap.containsKey(product.getNumberId())){
-                PrenotProduct productInMap = prenotMap.get(product.getNumberId());
+            if (prenotMap.containsKey(product.getId())){
+                PrenotProduct productInMap = prenotMap.get(product.getId());
                 productInMap.addQtyBuffer(product.getQtyBuffer());
                 productInMap.addQtySales(product.getQtySales());
             }else {
-                prenotMap.put(product.getNumberId(),product);
+                prenotMap.put(product.getId(),product);
             }
         }
         return prenotMap;

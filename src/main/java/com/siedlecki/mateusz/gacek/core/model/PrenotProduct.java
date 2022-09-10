@@ -8,7 +8,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 public class PrenotProduct {
-    private String numberId;
+    private String id;
     private int qtySales;
     private int qtyBuffer;
 
@@ -17,7 +17,7 @@ public class PrenotProduct {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PrenotProduct that = (PrenotProduct) o;
-        return Objects.equals(numberId, that.numberId);
+        return Objects.equals(id, that.id);
     }
 
     public void addQtyBuffer(int addingQty){
@@ -31,7 +31,7 @@ public class PrenotProduct {
     @Override
     public String toString() {
         return "PrenotProduct{" +
-                "numberId='" + numberId + '\'' +
+                "numberId='" + id + '\'' +
                 ", qtySales=" + qtySales +
                 ", qtyBuffor=" + qtyBuffer +
                 '}';
@@ -39,6 +39,6 @@ public class PrenotProduct {
 
     @Override
     public int hashCode() {
-        return Objects.hash(numberId);
+        return Objects.hash(id);
     }
 }

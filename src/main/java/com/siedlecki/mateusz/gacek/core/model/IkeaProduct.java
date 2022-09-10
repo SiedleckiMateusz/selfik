@@ -6,16 +6,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.TreeSet;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
 public class IkeaProduct {
-    private final String specshop;
-    private final String rangeGroup;
-    private final String numberId;
+    private final String id;
     private final String name;
-    private TreeSet<String> locations;
+    private Set<Location> locations;
     private final Integer fcst;
     private Integer assq;
     private final Double avgSales;
@@ -27,6 +27,8 @@ public class IkeaProduct {
     private int prenotBuffer;
     @Setter
     private PickingInfo pickingInfo;
+    @Setter
+    private ProductStatus status;
 
     public int onSalePlaces() {
         return availableStock + (pickingInfo != null ? pickingInfo.getQtyAfterDay() : 0) - sgf;
@@ -89,9 +91,30 @@ public class IkeaProduct {
         prenotBuffer += qty;
     }
 
+    public Location getMainLocation(){
+        return locations.stream()
+                .filter(Location::isMain)
+                .findFirst()
+                .orElse(locations.iterator().next());
+    }
+
+    public String locationsToString(){
+        return locations.stream()
+                .sorted((o1, o2) -> {
+                    if (o1.isMain()) {
+                        return -1;
+                    }
+                    if (o2.isMain()) {
+                        return 1;
+                    }
+                    return o1.getName().compareTo(o2.getName());})
+                .map(Location::getName)
+                .collect(Collectors.toList()).toString();
+    }
+
     @Override
     public String toString() {
-        return "numId: " + numberId + ", " + name + ", locations=" + locations + ", assq: "
+        return "numId: " + id + ", " + name + ", locations=" + locations + ", assq: "
                 + assq + ", refill level: " + onSalePlaces() + " free space: "
                 + freeSpace() + "/" + freeSpace() / palQty + "pallets";
     }

@@ -1,9 +1,9 @@
 package com.siedlecki.mateusz.gacek.core.mapper;
 
 import com.siedlecki.mateusz.gacek.core.Constants;
-import com.siedlecki.mateusz.gacek.core.model.Column;
-import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
-import com.siedlecki.mateusz.gacek.core.model.LocationHelper;
+import com.siedlecki.mateusz.gacek.core.ProductsContainer;
+import com.siedlecki.mateusz.gacek.core.model.*;
+import org.apache.commons.compress.utils.Sets;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,25 +15,44 @@ import java.util.stream.Collectors;
 
 public class Slm00003Mapper {
 
-    public static Map<String,IkeaProduct> mapToProductsMap(Sheet sheet) throws IOException {
+    public static void mapToProductsMap(Sheet sheet, ProductsContainer container) throws IOException {
         List<LocationHelper> locationOrder = sortSheetByLocation(sheet);
 
         Map<String,IkeaProduct> productMap = new HashMap<>();
+        Map<String,LocationsWithProducts> locations = new HashMap<>();
 
         for (LocationHelper loc : locationOrder){
             Row row = sheet.getRow(loc.getIndex());
             if (!rowsIsIgnored(row)){
                 String productId = row.getCell(5).getStringCellValue();
+                String locationName = row.getCell(7).getStringCellValue();
+                if (locations.containsKey(locationName)){
+                    locations.get(locationName).getArtilceIds().add(productId);
+                }else {
+                    locations.put(locationName,new LocationsWithProducts(locationName, Sets.newHashSet(productId)));
+                }
                 if (productMap.containsKey(productId)){
                     IkeaProduct product = productMap.get(productId);
-                    product.getLocations().add(row.getCell(7).getStringCellValue());
+                    product.getLocations().add(
+                            buildLocation(row)
+                    );
                     product.addAssq((int) row.getCell(16).getNumericCellValue());
                 }else {
                     productMap.put(productId,mapToProduct(row));
                 }
             }
         }
-        return productMap;
+        container.setLocations(new HashSet<>(locations.values()));
+        container.setIkeaProductMap(productMap);
+    }
+
+    private static Location buildLocation(Row row) {
+        return Location.builder()
+                .main(row.getCell(8).getStringCellValue().equals("3"))
+                .rangeGroup(row.getCell(2).getStringCellValue())
+                .specshop(setSpecshop(row.getCell(1).getStringCellValue()))
+                .name(row.getCell(7).getStringCellValue())
+                .build();
     }
 
     private static List<LocationHelper> sortSheetByLocation(Sheet sheet) {
@@ -59,12 +78,13 @@ public class Slm00003Mapper {
     }
 
     private static IkeaProduct mapToProduct(Row row) throws IOException {
-        TreeSet<String> locations = new TreeSet<>();
-        locations.add(row.getCell(7).getStringCellValue());
+        Set<Location> locations = new HashSet<>();
+        locations.add(
+                buildLocation(row)
+        );
+
         return IkeaProduct.builder()
-                .specshop(row.getCell(1).getStringCellValue())
-                .rangeGroup(row.getCell(2).getStringCellValue())
-                .numberId(row.getCell(5).getStringCellValue())
+                .id(row.getCell(5).getStringCellValue())
                 .name(row.getCell(6).getStringCellValue())
                 .locations(locations)
                 .fcst((int)row.getCell(14).getNumericCellValue())
@@ -75,6 +95,12 @@ public class Slm00003Mapper {
                 .sgf((int)row.getCell(44).getNumericCellValue())
                 .volume(mapToDoubleNumber(row.getCell(46)))
                 .build();
+    }
+
+    private static String setSpecshop(String specshop) {
+        if (specshop.toLowerCase().startsWith("odd")) return "NP";
+        if (specshop.toLowerCase().startsWith("even")) return "P";
+        return "-";
     }
 
     private static Double mapToDoubleNumber(Cell cell) throws IOException {

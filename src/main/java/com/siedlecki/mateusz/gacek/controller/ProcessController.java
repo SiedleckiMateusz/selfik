@@ -1,9 +1,8 @@
 package com.siedlecki.mateusz.gacek.controller;
 
 import com.siedlecki.mateusz.gacek.core.FileGeneratorService;
+import com.siedlecki.mateusz.gacek.core.ProductsContainer;
 import com.siedlecki.mateusz.gacek.core.XlsxFileWriter;
-import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
-import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
 import com.siedlecki.mateusz.gacek.core.model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +23,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
 @SessionScope
 public class ProcessController {
-    private Map<String, IkeaProduct> ikeaProductMap;
-    private Map<String, PrenotProduct> prenotProductMap;
+    private final ProductsContainer container = new ProductsContainer();
     private XlsxFileWriter fileWriter;
     private Result result;
 
@@ -80,9 +77,9 @@ public class ProcessController {
             return "redirect:/opq-form";
         }
 
-        String fileName = "Poranne zamówienie " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+        String fileName = "Selfik " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
-            result = service.getProductsToOrderAndPrepare(ikeaProductMap);
+            result = service.getProductsToOrderAndPrepare(container.getIkeaProductMap());
             fileWriter = service.generateXlsxFile(result, fileName);
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,9 +99,9 @@ public class ProcessController {
         if (!flags.isPrenotIsOkFlag()) {
             return "redirect:/prenot-form";
         }
-        String fileName = "Prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+        String fileName = "Selfik " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
         try {
-            result = service.getProductsToOrderAndPrepare(ikeaProductMap, prenotProductMap);
+            result = service.getProductsToOrderAndPrepare(container);
             fileWriter = service.generateXlsxFile(result, fileName);
         } catch (IOException e) {
             e.printStackTrace();
@@ -147,7 +144,7 @@ public class ProcessController {
     public String processSLM0003(@RequestAttribute("slm0003") MultipartFile slm0003) {
         try {
             log.info("Recive slm0003 file");
-            ikeaProductMap = service.processSlm0003file(slm0003);
+            service.processSlm0003file(slm0003,container);
             log.info("Processed slm0003 file");
             flags.setSLM0003IsOkFlag(true);
             log.info("Set slm0003Flag on true");
@@ -162,7 +159,7 @@ public class ProcessController {
     public String processOpq(@RequestAttribute("opq") MultipartFile opq) {
         try {
             log.info("Recive OPQ file");
-            ikeaProductMap = service.processOpq(opq, ikeaProductMap, getDaysToPick());
+            container.setIkeaProductMap(service.processOpq(opq, container.getIkeaProductMap(), getDaysToPick()));
             log.info("Processed OPQ file");
             flags.setOpqIsOkFlag(true);
             log.info("Set OpqFlag on true");
@@ -177,7 +174,7 @@ public class ProcessController {
     public String processPrenot(@RequestAttribute("prenot") MultipartFile prenot) {
         try {
             log.info("Recive Prenot file");
-            prenotProductMap = service.processPrenotFile(prenot);
+            container.setPrenotProductMap(service.processPrenotFile(prenot));
             log.info("Processed Prenot file");
             flags.setPrenotIsOkFlag(true);
             log.info("Set prenotFlag on true");
@@ -206,8 +203,9 @@ public class ProcessController {
         log.info("Restarting params");
         flags.reset();
 
-        ikeaProductMap = null;
-        prenotProductMap = null;
+        container.setIkeaProductMap(null);
+        container.setPrenotProductMap(null);
+        container.setLocations(null);
         fileWriter = null;
     }
 

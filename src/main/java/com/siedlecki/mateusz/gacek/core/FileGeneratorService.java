@@ -35,9 +35,9 @@ public class FileGeneratorService {
         this.ikeaProductProcessor = ikeaProductProcessor;
     }
 
-    public Map<String,IkeaProduct> processSlm0003file(MultipartFile slm0003File) throws IOException {
+    public void processSlm0003file(MultipartFile slm0003File,ProductsContainer container) throws IOException {
         Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
-        return Slm00003Mapper.mapToProductsMap(slm0003Sheet);
+        Slm00003Mapper.mapToProductsMap(slm0003Sheet,container);
     }
 
     public Map<String,PrenotProduct> processPrenotFile(MultipartFile prenotFile) throws IOException {
@@ -54,9 +54,8 @@ public class FileGeneratorService {
         return ikeaProductProcessor.getProductsToOrderAndPrepare(new ArrayList<>(ikeaProductMap.values()));
     }
 
-    public Result getProductsToOrderAndPrepare(
-            Map<String,IkeaProduct> ikeaProducts, Map<String,PrenotProduct> prenotProducts){
-        return ikeaProductProcessor.getProductsToPrepareAndExtraOrder(new ArrayList<>(ikeaProducts.values()),new ArrayList<>(prenotProducts.values()));
+    public Result getProductsToOrderAndPrepare(ProductsContainer container){
+        return ikeaProductProcessor.getProductsToPrepareAndExtraOrder(container);
     }
 
     public XlsxFileWriter generateXlsxFile(Result result,String fileName) throws IOException {
