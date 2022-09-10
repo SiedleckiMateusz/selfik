@@ -3,12 +3,24 @@
       th:replace="fragments/general :: layout(~{::title}, ~{::section})">
 <head>
     <meta charset="UTF-8">
-    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
     <title>Podsumowanie</title>
 </head>
 <body>
 <section>
-    <table class="myTable p-1">
+    <h2>Podsumowanie</h2>
+    <div class="row center">
+        <div class="col-md-6">
+            <a th:href="generate-excel" class="btn btn-success btn-block my-2">
+                Excel file
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a th:href="generate-pdf" class="btn btn-danger btn-block my-2">
+                Pdf file
+            </a>
+        </div>
+    </div>
+    <table id="table" class="toPrint p-1">
         <thead>
         <tr>
             <th>ART NR</th>
@@ -20,17 +32,14 @@
         </thead>
         <tbody>
         <tr th:each="product: ${toPrepare}">
-            <td th:text="${product.getNumberId()}">1</td>
+            <td th:text="${product.getId()}">1</td>
             <td th:text="${product.getName()}">Mark DSAD DASDSA GSDFDSFDSFDS FDSFDS FDSFSDFSDSFSDSDFSDSD DFSDFSD</td>
-            <td th:text="${product.getLocations()}">Otto</td>
+            <td th:text="${product.locationsToString()}">Otto</td>
             <td th:text="${product.prenotSalesPQString()}">@mdo</td>
             <td th:text="${product.l23OrderToFullPal()}">@mdo</td>
         </tr>
         </tbody>
     </table>
-    <button onclick="window.print();" class="noPrint">
-        Print Me
-    </button>
 </section>
 </body>
 </html>

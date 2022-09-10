@@ -52,9 +52,12 @@ public class ProcessController {
     }
 
     @GetMapping("summary")
-    public String printing(Model model){
-        model.addAttribute("toPrepare",result.getToPrepare());
-        return "summary";
+    public String summary(Model model) {
+        if (flags.isActiveAnyProcess()){
+            model.addAttribute("toPrepare", result.getToPrepare());
+            return "summary";
+        }
+        return "redirect:/";
     }
 
     public String process() {
@@ -77,13 +80,8 @@ public class ProcessController {
             return "redirect:/opq-form";
         }
 
-        String fileName = "Selfik " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
-        try {
-            result = service.getProductsToOrderAndPrepare(container.getIkeaProductMap());
-            fileWriter = service.generateXlsxFile(result, fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        result = service.getProductsToOrderAndPrepare(container.getIkeaProductMap());
+
         return "redirect:/summary";
     }
 
@@ -99,13 +97,8 @@ public class ProcessController {
         if (!flags.isPrenotIsOkFlag()) {
             return "redirect:/prenot-form";
         }
-        String fileName = "Selfik " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
-        try {
-            result = service.getProductsToOrderAndPrepare(container);
-            fileWriter = service.generateXlsxFile(result, fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        result = service.getProductsToOrderAndPrepare(container);
+
 
         return "redirect:/summary";
     }
@@ -183,18 +176,32 @@ public class ProcessController {
         }
         return process();
     }
+    @GetMapping("generate-excel")
+    public String checkIfCanGenerateExcelFile(){
+        if (flags.isActiveAnyProcess()){
+            return "redirect:/generate-excel-file";
+        }
+        return "redirect:/";
+    }
 
-    @GetMapping("generate-file")
+    @GetMapping("generate-excel-file")
     public ResponseEntity<?> generateFile() {
         try {
+            if (flags.isMorningProcessFlag()) {
+                String fileName = "Seflik rano " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+                fileWriter = service.generateXlsxFile(result, fileName);
+            }
+            if (flags.isPrenotProcessFlag()) {
+                String fileName = "Selfik prenot " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
+                fileWriter = service.generateXlsxFile(result, fileName);
+            }
             if (fileWriter != null && fileWriter.getWorkbook() != null) {
                 return sendReadyFile(fileWriter);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            return ResponseEntity.of(Optional.of(e.getMessage()));
-        } finally {
             reset();
+            return ResponseEntity.of(Optional.of(e.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

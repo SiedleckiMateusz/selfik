@@ -1,20 +1,14 @@
-@media print {
-    .noPrint{
-        display:none;
-    }
+h2{
+    color: whitesmoke;
 }
-h1{
-    color:#f6f6;
-}
-
-.myTable{
-    background-color: rgba(240, 248, 255, 0.75);
-    color: black;
+table{
     width: 100%;
-    border-collapse: collapse;
 }
 table,tr,td {
+    background-color: rgba(240, 248, 255, 0.75);
+    color: black;
     border-bottom: 1px solid black;
+    border-collapse: collapse;
 }
 th {
     background-color: #323434;
@@ -22,4 +16,7 @@ th {
 }
 tr:hover {
     background-color: rgba(154, 179, 211, 0.47);
+}
+.btn-block {
+    width: 100%;
 }

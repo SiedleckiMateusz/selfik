@@ -3,6 +3,7 @@ package com.siedlecki.mateusz.gacek.core.model;
 import com.siedlecki.mateusz.gacek.core.FirstLocationComparator;
 import lombok.Getter;
 
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;

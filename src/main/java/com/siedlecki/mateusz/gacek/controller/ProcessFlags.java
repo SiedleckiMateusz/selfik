@@ -23,4 +23,8 @@ public class ProcessFlags {
         prenotProcessFlag = false;
         morningProcessFlag = false;
     }
+
+    public boolean isActiveAnyProcess(){
+        return prenotProcessFlag || morningProcessFlag;
+    }
 }

@@ -1,12 +1,10 @@
 package com.siedlecki.mateusz.gacek.core;
 
-import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import lombok.Getter;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.IOException;
 import java.util.List;
 
 @Getter
