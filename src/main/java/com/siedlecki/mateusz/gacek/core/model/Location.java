@@ -9,6 +9,6 @@ import lombok.Getter;
 public class Location {
     private boolean main;
     private String name;
-    private String specshop;
+    private Specshop specshop;
     private String rangeGroup;
 }

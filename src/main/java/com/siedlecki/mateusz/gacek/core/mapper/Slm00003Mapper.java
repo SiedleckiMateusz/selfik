@@ -97,10 +97,10 @@ public class Slm00003Mapper {
                 .build();
     }
 
-    private static String setSpecshop(String specshop) {
-        if (specshop.toLowerCase().startsWith("odd")) return "NP";
-        if (specshop.toLowerCase().startsWith("even")) return "P";
-        return "-";
+    private static Specshop setSpecshop(String specshop) {
+        if (specshop.toLowerCase().startsWith("odd")) return Specshop.NIEPARZYSTA;
+        if (specshop.toLowerCase().startsWith("even")) return Specshop.PARZYSTA;
+        return Specshop.OTHER;
     }
 
     private static Double mapToDoubleNumber(Cell cell) throws IOException {

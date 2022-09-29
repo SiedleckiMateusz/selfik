@@ -15,7 +15,7 @@ public class SheetContentGenerator {
         List<String[]> result = new ArrayList<>();
         for (IkeaProduct product : products){
             result.add(new String[]{
-                    product.getMainLocation().getSpecshop(),
+                    product.getMainLocation().getSpecshop().getShortName(),
                     product.getMainLocation().getRangeGroup(),
                     product.getId(),
                     product.getName(),
@@ -55,7 +55,7 @@ public class SheetContentGenerator {
         List<String[]> result = new ArrayList<>();
         for (IkeaProduct product : products){
             result.add(new String[]{
-                    product.getMainLocation().getSpecshop(),
+                    product.getMainLocation().getSpecshop().getShortName(),
                     product.getMainLocation().getRangeGroup(),
                     product.getId(),
                     product.getName(),
