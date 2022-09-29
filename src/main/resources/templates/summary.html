@@ -15,31 +15,114 @@
             </a>
         </div>
         <div class="col-md-6">
-            <a th:href="generate-pdf" class="btn btn-danger btn-block my-2">
+            <button type="button" class="btn btn-danger btn-block my-2" data-bs-toggle="modal"
+                    data-bs-target="#pdfModal">
                 Pdf file
-            </a>
+            </button>
         </div>
     </div>
-    <table id="table" class="toPrint p-1">
-        <thead>
-        <tr>
-            <th>ART NR</th>
-            <th>ART NAME</th>
-            <th>SLID</th>
-            <th>PRENOT[PQ]</th>
-            <th>L23[PQ]</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product: ${toPrepare}">
-            <td th:text="${product.getId()}">1</td>
-            <td th:text="${product.getName()}">Mark DSAD DASDSA GSDFDSFDSFDS FDSFDS FDSFSDFSDSFSDSDFSDSD DFSDFSD</td>
-            <td th:text="${product.locationsToString()}">Otto</td>
-            <td th:text="${product.prenotSalesPQString()}">@mdo</td>
-            <td th:text="${product.l23OrderToFullPal()}">@mdo</td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="row center">
+        <div class="col" id="tabele">
+            <ul class="nav nav-tabs bg-white" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#to-prepare-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Do przygotowania</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#l23-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Zamówienie L23</button>
+                </li>
+            </ul>
+
+            <!--tresc zakładek -->
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade active show" id="to-prepare-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <table id="table" class="p-1">
+                        <thead>
+                        <tr>
+                            <th>STRONA</th>
+                            <th>ART NR</th>
+                            <th>ART NAME</th>
+                            <th>SLID</th>
+                            <th>ALL[PQ]</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product: ${toPrepare}">
+                            <td th:text="${product.getMainLocation().getSpecshop().getShortName()}">P</td>
+                            <td th:text="${product.getId()}">1</td>
+                            <td th:text="${product.getName()}">Mark DSAD DASDSA GSDFDSFDSFDS FDSFDS FDSFSDFSDSFSDSDFSDSD DFSDFSD</td>
+                            <td th:text="${product.locationsToString()}">Otto</td>
+                            <td th:text="${product.getPrenotSales()+product.l23OrderToFullPal()}">@mdo</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="l23-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    <table id="l23Table" class="p-1">
+                        <thead>
+                        <tr>
+                            <th>NR</th>
+                            <th>NAZWA</th>
+                            <th>PRENOTA[PQ]</th>
+                            <th>L23[PQ]</th>
+                            <th>RAZEM[SZT]</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product: ${l23List}">
+                            <td th:text="${product.getId()}">1</td>
+                            <td th:text="${product.getName()}">Mark DSAD DASDSA GSDFDSFDSFDS FDSFDS FDSFSDFSDSFSDSDFSDSD DFSDFSD</td>
+                            <td th:text="${product.prenotSalesPQString()}">@mdo</td>
+                            <td th:text="${product.l23OrderToFullPal()}">@mdo</td>
+                            <td th:text="${product.l23Order()+product.prenotSales}">@mdo</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal PDF -->
+    <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form method="get" id="pdfForm" action="#" th:action="@{/generate-pdf}">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Co ma zawierać pdf?</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked"
+                                   id="defaultCheck1"
+                                   disabled>
+                            <label class="form-check-label" for="defaultCheck1">
+                                Parzyste
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked="checked"
+                                   id="defaultCheck2"
+                                   disabled>
+                            <label class="form-check-label" for="defaultCheck2">
+                                Nieparzyste
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="l23" id="l23">
+                            <label class="form-check-label" for="l23">
+                                L23
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="zapiszIZamknij()" class="btn btn-primary">Generuj PDF</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
 </body>
 </html>

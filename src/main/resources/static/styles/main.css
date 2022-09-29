@@ -20,3 +20,7 @@ tr:hover {
 .btn-block {
     width: 100%;
 }
+
+#tabele{
+    background-color: rgba(217,222, 255, 0.64);
+}
