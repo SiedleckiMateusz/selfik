@@ -2,10 +2,8 @@ package com.siedlecki.mateusz.gacek.core;
 
 import com.siedlecki.mateusz.gacek.core.model.Column;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +26,12 @@ public class Constants {
     public static LocalTime CPS_CUT_OF_TIME = LocalTime.of(16,0);
 
     public static String[] EXCEL_COLUMNS_NAMES;
+
+    public static float[] COLUMNS_SIZE_FOR_TO_PREPARE_PDF = new float[]{9,33,43,6,9};
+    public static List<String> HEADERS_FOR_TO_PREPARE_PDF = Arrays.asList("NR","NAZWA","SLID","PALET","STATUS");
+
+    public static float[] COLUMNS_SIZE_FOR_L23_PDF = new float[]{9,61,10,10,10};
+    public static List<String> HEADERS_FOR_L23_PDF = Arrays.asList("NR","NAZWA","L23[pal]","PRENOT[pal]","RAZEM [szt]");
 
     static {
         SLM0003_COLUMNS.add(Column.builder().index(0).name("DIV").build());

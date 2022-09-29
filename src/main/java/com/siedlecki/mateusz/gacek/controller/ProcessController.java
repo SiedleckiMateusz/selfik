@@ -8,7 +8,7 @@ import com.siedlecki.mateusz.gacek.core.FileGeneratorService;
 import com.siedlecki.mateusz.gacek.core.ProductsContainer;
 import com.siedlecki.mateusz.gacek.core.XlsxFileWriter;
 import com.siedlecki.mateusz.gacek.core.model.Result;
-import com.siedlecki.mateusz.gacek.core.pdf.PdfGenerator;
+import com.siedlecki.mateusz.gacek.core.pdf.PdfGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,6 +61,7 @@ public class ProcessController {
     public String summary(Model model) {
         if (flags.isActiveAnyProcess()){
             model.addAttribute("toPrepare", result.getToPrepare());
+            model.addAttribute("l23List", result.getToOrder());
             return "summary";
         }
         return "redirect:/";
@@ -212,24 +214,24 @@ public class ProcessController {
     }
 
     @GetMapping("generate-pdf")
-    public String checkIfCanGeneratePdfFile(){
+    public String checkIfCanGeneratePdfFile(@RequestParam(name = "l23", required = false) boolean l23){
         if (flags.isActiveAnyProcess()){
-            return "redirect:/generate-pdf-file";
+            return "redirect:/generate-pdf-file?l23="+l23;
         }
         return "redirect:/";
     }
 
     @GetMapping("generate-pdf-file")
-    public ResponseEntity<?> printing() {
+    public ResponseEntity<?> printing(@RequestParam(name = "l23",required = false) boolean l23) {
         Document document = new Document(PageSize.A4.rotate(),20,20,20,20);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            PdfWriter.getInstance(document, outputStream);
+            PdfWriter instance = PdfWriter.getInstance(document, outputStream);
             document.open();
-            PdfGenerator generator = new PdfGenerator(document);
-            generator.generate(result);
+            PdfGeneratorService pdfGeneratorService = new PdfGeneratorService();
+            pdfGeneratorService.generatePrenotDocument(document,instance,result,l23);
             document.close();
-        } catch (DocumentException e) {
+        } catch (DocumentException | IOException e) {
             System.err.println(e.getMessage());
             reset();
             return ResponseEntity.of(Optional.of(e.getMessage()));

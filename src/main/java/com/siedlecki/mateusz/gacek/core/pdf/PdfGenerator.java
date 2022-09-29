@@ -1,84 +1,84 @@
 package com.siedlecki.mateusz.gacek.core.pdf;
 
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
-import com.siedlecki.mateusz.gacek.core.model.Result;
+import com.itextpdf.text.pdf.PdfWriter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PdfGenerator {
     private final Document document;
+    private final PdfWriter instance;
     private final Font titleFont;
+    private final Font tableFont;
 
-    public PdfGenerator(Document document) {
+    public PdfGenerator(Document document, PdfWriter instance) throws DocumentException, IOException {
         this.document = document;
+        this.instance = instance;
         this.titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+        BaseFont bf = BaseFont.createFont("src/main/resources/static/fonts/Montserrat-Light.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        this.tableFont = new Font(bf);
     }
 
-    public void generate(Result result) throws DocumentException {
-        // TODO: 10.09.2022 Uporządkować ten generator i stworzyć serwis do generowania odpowiednich plików
-        createHeaderName("Parzyste");
-        List<IkeaProduct> parzyste = result.getToPrepare().stream()
-                .filter(ip -> ip.getMainLocation().getSpecshop().equalsIgnoreCase("P"))
-                .sorted(Comparator.comparing(ikeaProduct -> ikeaProduct.getMainLocation().getName()))
-                .collect(Collectors.toList());
-        createTable(document,parzyste);
-        document.newPage();
-        createHeaderName("Nieparzyste");
-        List<IkeaProduct> nieparzyste = result.getToPrepare().stream()
-                .filter(ip -> ip.getMainLocation().getSpecshop().equalsIgnoreCase("NP"))
-                .sorted(Comparator.comparing(ikeaProduct -> ikeaProduct.getMainLocation().getName()))
-                .collect(Collectors.toList());
-        createTable(document,nieparzyste);
+    public void generatePageWithTable(boolean newPage,
+                                      String naglowek,
+                                      List<List<String>> listOfValues,
+                                      List<String> headerNames,
+                                      float[] headerSizes) throws DocumentException {
+        if (newPage) {
+            document.newPage();
+        }
+        if (naglowek != null) {
+            createHeaderName(naglowek);
+        }
+        createTable(listOfValues, headerNames, headerSizes);
+
+
+        int currentPageNumber = instance.getCurrentPageNumber();
+        if (currentPageNumber % 2 == 1) {
+            document.newPage();
+            document.add(new Paragraph(" "));
+        }
     }
 
     private void createHeaderName(String nazwa) throws DocumentException {
 
         Paragraph parzysteParagraf = new Paragraph();
-        parzysteParagraf.add(new Paragraph(nazwa,titleFont));
+        parzysteParagraf.add(new Paragraph(nazwa, titleFont));
         parzysteParagraf.add(new Paragraph(" "));
 
         document.add(parzysteParagraf);
     }
 
-    private void createTable(Document document, List<IkeaProduct> ikeaProductList) throws DocumentException {
-
-        PdfPTable table = createTableWithHeaders();
-        fillTable(table,ikeaProductList);
+    private void createTable(List<List<String>> listOfValues,
+                             List<String> headerNames,
+                             float[] headerSizes) throws DocumentException {
+        PdfPTable table = createTableWithHeaders(headerNames, headerSizes);
+        fillTable(table, listOfValues);
         table.setWidthPercentage(100);
         document.add(table);
     }
 
-    private void fillTable(PdfPTable table, List<IkeaProduct> ikeaProductList) {
-        for (IkeaProduct p:ikeaProductList){
-            List<String> values = new ArrayList<>();
-            values.add(p.getId());
-            values.add(p.getName());
-            values.add(p.locationsToString());
-            values.add(String.format("%.2f",(double)p.l23OrderToFullPal()+p.prenotSalesPQ()));
-            values.add(p.getStatus().getOpis());
-            filRow(table,values);
+    private void fillTable(PdfPTable table, List<List<String>> listOfValues) {
+        for (List<String> p : listOfValues) {
+            filRow(table, p);
         }
     }
 
     private void filRow(PdfPTable table, List<String> values) {
-        for (String val: values){
-            table.addCell(val);
+        for (String val : values) {
+            table.addCell(new Phrase(val, tableFont));
         }
     }
 
-    private PdfPTable createTableWithHeaders() {
-        PdfPTable table = new PdfPTable(new float[]{8,33,44,6,9});
+    private PdfPTable createTableWithHeaders(List<String> headerNames, float[] hedersSize) {
+        PdfPTable table = new PdfPTable(hedersSize);
         PdfPCell c1 = new PdfPCell();
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        List<String> headers = Arrays.asList("NR","NAZWA","SLID","PALET","STATUS");
-        for (String header:headers){
+        for (String header : headerNames) {
             c1.setPhrase(new Phrase(header));
             table.addCell(c1);
         }
