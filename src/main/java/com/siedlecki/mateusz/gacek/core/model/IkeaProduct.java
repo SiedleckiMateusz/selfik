@@ -80,7 +80,7 @@ public class IkeaProduct {
     }
 
     public int l23AndPrenotOrderQty(){
-        return ((prenotSalesPQ()+(int)l23OrderPQ())*palQty);
+        return (prenotSales()+(l23OrderToFullPal()*palQty));
     }
 
     public void addAssq(int ssqLocation) {
