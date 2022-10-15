@@ -79,6 +79,10 @@ public class IkeaProduct {
         return (double) bufferAndSgf() / palQty;
     }
 
+    public int l23AndPrenotOrderQty(){
+        return ((prenotSalesPQ()+(int)l23OrderPQ())*palQty);
+    }
+
     public void addAssq(int ssqLocation) {
         this.assq += ssqLocation;
     }
