@@ -80,7 +80,7 @@ public class IkeaProduct {
     }
 
     public int l23AndPrenotOrderQty(){
-        int result = (prenotSales()+(l23OrderToFullPal()*palQty));
+        int result = (prenotSales+(l23OrderToFullPal()*palQty));
         System.out.println("prenotSales(): "+prenotSales());
         System.out.println("l23OrderToFullPal(): "+prenotSales());
         System.out.println("palQty: "+palQty);
