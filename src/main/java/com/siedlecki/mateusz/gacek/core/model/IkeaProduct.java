@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -79,7 +78,7 @@ public class IkeaProduct {
         return (double) bufferAndSgf() / palQty;
     }
 
-    public int l23AndPrenotOrderQty(){
+    public int l23AndPrenotOrderPalToQty(){
         int result = (prenotSales+(l23OrderToFullPal()*palQty));
         System.out.println("prenotSales(): "+prenotSales);
         System.out.println("l23OrderToFullPal(): "+l23OrderToFullPal());

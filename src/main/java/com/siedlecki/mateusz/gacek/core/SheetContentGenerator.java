@@ -39,7 +39,7 @@ public class SheetContentGenerator {
                     product.getName(),
                     String.format("%.2f", product.prenotSalesPQ()),
                     String.valueOf(product.l23OrderToFullPal()),
-                    String.valueOf(product.l23AndPrenotOrderQty())
+                    String.valueOf(product.l23AndPrenotOrderPalToQty())
             });
         }
         return result;

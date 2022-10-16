@@ -71,7 +71,7 @@ public class PdfGeneratorService {
             values.add(p.getName());
             values.add(String.format("%.2f",(double)p.l23OrderToFullPal()));
             values.add(String.format("%.2f",p.prenotSalesPQ()));
-            values.add(String.valueOf(p.l23Order()+p.getPrenotSales()));
+            values.add(String.valueOf(p.l23AndPrenotOrderPalToQty()));
             listOfValues.add(values);
         }
         return listOfValues;
