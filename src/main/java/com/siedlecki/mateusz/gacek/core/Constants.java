@@ -31,7 +31,7 @@ public class Constants {
     public static List<String> HEADERS_FOR_TO_PREPARE_PDF = Arrays.asList("NR","NAZWA","SLID","PALET","STATUS");
 
     public static float[] COLUMNS_SIZE_FOR_L23_PDF = new float[]{9,61,10,10,10};
-    public static List<String> HEADERS_FOR_L23_PDF = Arrays.asList("NR","NAZWA","L23[pal]","PRENOT[pal]","RAZEM [szt]");
+    public static List<String> HEADERS_FOR_L23_PDF = Arrays.asList("NAZWA","NR","L23[pal]","PRENOT[pal]","RAZEM [szt]");
 
     static {
         SLM0003_COLUMNS.add(Column.builder().index(0).name("DIV").build());

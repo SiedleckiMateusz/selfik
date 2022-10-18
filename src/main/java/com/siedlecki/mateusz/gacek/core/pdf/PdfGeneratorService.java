@@ -67,8 +67,8 @@ public class PdfGeneratorService {
         List<List<String>> listOfValues = new ArrayList<>();
         for (IkeaProduct p:l23){
             List<String> values = new ArrayList<>();
-            values.add(p.getId());
             values.add(p.getName());
+            values.add(p.getId());
             values.add(String.format("%.2f",(double)p.l23OrderToFullPal()));
             values.add(String.format("%.2f",p.prenotSalesPQ()));
             values.add(String.valueOf(p.l23AndPrenotOrderPalToQty()));
