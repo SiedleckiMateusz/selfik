@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class IkeaProductProcessorTest {
 
@@ -40,7 +41,7 @@ class IkeaProductProcessorTest {
                 .prenotSales(100)
                 .build());
         //when
-        List<IkeaProduct> result = cut.getProductsToOrder(products);
+        List<IkeaProduct> result = cut.getProductsl23ToOrder(products);
         //then
         assertEquals(2, products.size());
         assertFalse(result.isEmpty());
@@ -74,8 +75,8 @@ class IkeaProductProcessorTest {
                 .prenotSales(0)
                 .build());
         //when
-        List<IkeaProduct> productsToOrder = cut.getProductsToOrder(products);
-        List<IkeaProduct> result = cut.getProductsToPreparePlaces(productsToOrder);
+        List<IkeaProduct> productsToOrder = cut.getProductsl23ToOrder(products);
+        List<IkeaProduct> result = cut.findProductsToPreparePlaces(productsToOrder);
         //then
         assertEquals(2, products.size());
         assertFalse(result.isEmpty());

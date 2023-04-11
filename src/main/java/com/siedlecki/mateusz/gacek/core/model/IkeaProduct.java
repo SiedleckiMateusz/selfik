@@ -16,7 +16,7 @@ public class IkeaProduct {
     private final String name;
     private Set<Location> locations;
     private final Integer fcst;
-    private Integer assq;
+    private int assq;
     private final Double avgSales;
     private final Integer palQty;
     private Integer availableStock;

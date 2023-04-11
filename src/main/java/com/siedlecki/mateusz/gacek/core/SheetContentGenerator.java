@@ -61,7 +61,7 @@ public class SheetContentGenerator {
                     product.getName(),
                     product.locationsToString(),
                     product.getFcst().toString(),
-                    product.getAssq().toString(),
+                    String.valueOf(product.getAssq()),
                     String.format("%.2f", product.getAvgSales()),
                     product.getPalQty().toString(),
                     product.getAvailableStock().toString(),

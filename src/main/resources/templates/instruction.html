@@ -11,24 +11,26 @@
         <div class="row">
             <div class="col">
                 <ol class="list-group">
-                    <li class="list-cell m-1">Uruchom prgram GADDxl MHS. Powinno wyświetlić się okienko logowania. Jeśli
-                        jest tam Twój login to klikasz OK. Jeśli są tam jakieś domyślne wartości np. „user”,”default” to
+                    <li class="list-cell m-1">Przejdź do aplikacji PowerBI FMS Reporting
+                        <a href="https://app.powerbi.com/groups/me/apps/40ba3fca-b69f-4f21-a63b-ff2b819345ad/">LINK</a>
+                        Jeżeli nie możesz wejść do aplikacji lub jej nie znajdujesz to
                         znaczy że nie masz dostępów. Skontaktuj się z przełożonym.
                     </li>
-                    <li class="list-cell m-1 my-lg-4">Po udanym logowaniu zobaczysz okno z listami. Nazwy list umieszczone są po
+                    <li class="list-cell m-1 my-lg-4">Po przejściu do aplikacji zobaczysz okno z listami. Nazwy list umieszczone są po
                         lewej stronie. Znajdź listę, której potrzebujesz.
                     </li>
                     <li class="list-cell m-1 my-lg-4" style="color: deepskyblue">Wybierz listę klikając na nią.</li>
-                    <li class="list-cell m-1 my-lg-4" style="color: #ff4b4b">Kliknij „Execute”, aby wygenerować listę.</li>
-                    <li class="list-cell m-1 my-lg-4" style="color: greenyellow">Jak lista się wygeneruje, kliknij „Display Table”.</li>
-                    <div class="alert alert-warning my-lg-4" role="alert">Uwaga! Generowanie listy używając Export to Excel jest nieobsługiwane przeze mnie ☹</div>
-                    <li class="list-cell m-1 my-lg-4">Wybierz Utility -> Export Data in View to… -> Save View Data as XLSX</li>
-                    <li class="list-cell m-1 my-lg-4">Zapisz w miejscu w którym będziesz w stanie odnaleźć plik</li>
+                    <li class="list-cell m-1 my-lg-4" style="color: #ff4b4b">Dopasuj filtry których potrzebujesz</li>
+                    <div class="alert alert-warning my-lg-4" role="alert">Uwaga! Listy bez żadnego filtra mogą być za duże i nie uda się ich załadować. Dlatego trzeba pamiętać o ograniczeniu danych zawartych w pliku ☹</div>
+                    <li class="list-cell m-1 my-lg-4" style="color: greenyellow">Nad nazwami kolumn po najechaniu w prawy róg wyświetlą się opcje a na końcu 3 kropki. Kliknij w kropki, a następnie wybierz eksportuj dane</li>
+                    <li class="list-cell m-1 my-lg-4">W nowo otwartym oknie wybierz "Podsumowane dane" oraz domyślny format pliku .xlsx</li>
+                    <li class="list-cell m-1 my-lg-4">Klikamy Exportuj i plik zostanie automatycznie pobrany. Zalecane jest zmienienie nazwy po pobraniu, ponieważ wszystkie listy generują się z nazwą "data"</li>
                 </ol>
             </div>
             <div class="col-lg-8">
-                <img th:src="@{/img/download_list1.jpg}" class="img-fluid m-2" alt="...">
-                <img th:src="@{/img/download_list2.jpg}" class="img-fluid m-2" alt="...">
+                <img th:src="@{/img/instruction/lista_slm003.png}" class="img-fluid m-2" alt="...">
+                <img th:src="@{/img/instruction/menu_eksportuj_dane.png}" class="img-fluid m-2" alt="...">
+                <img th:src="@{/img/instruction/okno_eksprotuj_dane.png}" class="img-fluid m-2" alt="...">
             </div>
         </div>
 

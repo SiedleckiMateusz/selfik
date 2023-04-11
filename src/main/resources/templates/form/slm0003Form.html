@@ -29,9 +29,6 @@
                 <li th:class="'list-group-item '+ ${(flags!=null && flags.isSLM0003IsOkFlag())?'list-group-item-success':'list-group-item-light'}">
                     SLM0003
                 </li>
-                <li th:class="'list-group-item '+ ${(flags!=null && flags.isOpqIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
-                    OPQ
-                </li>
                 <li th:if="${flags!=null && flags.isPrenotProcessFlag()}"
                     th:class="'list-group-item '+ ${(flags!=null && flags.isPrenotIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
                     PRENOTYFIKACJE
@@ -42,23 +39,20 @@
             <div class="card">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img th:src="@{/img/slm0003.JPG}" class="img-fluid rounded-start" alt="...">
+                        <img th:src="@{/img/slm003.JPG}" class="img-fluid rounded-start" alt="...">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">Wrzuć listę SLM0003_PG z katalogu Sales Location Management
-                                Postgres</h5>
+                            <h5 class="card-title">Wrzuć listę <a href="https://app.powerbi.com/Redirect?action=OpenReport&appId=40ba3fca-b69f-4f21-a63b-ff2b819345ad&reportObjectId=351edcbd-5147-4021-8135-ce69a716d4d5&ctid=720b637a-655a-40cf-816a-f22f40755c2c&reportPage=ReportSection0fcdcc4d94f3eb50e81d&pbi_source=appShareLink&portalSessionId=d839047e-96a4-488f-80a0-fed3a835fea9" target="_blank">
+                                SLM003</a> z katalogu Sales Location Management</h5>
                             <p class="card-text">Pobierz aktualną listę i wczytaj ją powyżej. Pamiętaj o poprawnym
                                 generowaniu listy. Jeśli nie wiesz jak to zrobić kliknij <a
-                                        th:href="instruction">tutaj</a></p>
+                                        th:href="instruction" target="_blank">tutaj</a></p>
                             <div class="alert alert-danger" role="alert">Uwaga! Przy generowaniu wybierz DIV tylko SF,
                                 ponieważ plik ze wszystkimi dywizjami jest za duży.
                             </div>
-                            <p class="card-text">Tej listę potrzebuję, aby sprawdzić aktualne parametry artykułów na
+                            <p class="card-text">Tą listę potrzebuję, aby sprawdzić aktualne parametry artykułów na
                                 magazynie</p>
-                            <div class="alert alert-warning" role="alert">Uwaga! Istnieje również lista SLM0003_DASH_PG,
-                                której niestety nie obsługuję
-                            </div>
                             <p class="card-text"><small class="text-muted">Jak wrzucisz listę i klikniesz DALEJ,
                                 poczekaj cierpliwie aż to przetrawię</small></p>
                         </div>

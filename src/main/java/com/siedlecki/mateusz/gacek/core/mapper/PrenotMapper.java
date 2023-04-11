@@ -8,6 +8,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.siedlecki.mateusz.gacek.core.model.PrenotColumn.*;
+
 public class PrenotMapper {
 
     public static Map<String,PrenotProduct> mapToPrenotProductMap(Sheet sheet) {
@@ -30,13 +32,14 @@ public class PrenotMapper {
     private static PrenotProduct mapToProduct(Row row) {
         int qtyBuffer = 0;
         int qtySales = 0;
-        int qty = (int) row.getCell(15).getNumericCellValue();
-        if (row.getCell(14).getStringCellValue().equals("Sales")) {
+        int qty = (int) row.getCell(ILOSC.getIndex()).getNumericCellValue();
+        String direction = row.getCell(DO.getIndex()).getStringCellValue();
+        if (direction.equals("Sales")) {
             qtySales+=qty;
-        } else {
+        } else if (direction.equals("Buffer")){
             qtyBuffer+=qty;
         }
-        String id = String.valueOf((int) row.getCell(1).getNumericCellValue());
+        String id = String.valueOf((int) row.getCell(NUMER.getIndex()).getNumericCellValue());
 
         while (id.length() < 8) {
             id = "0" + id;

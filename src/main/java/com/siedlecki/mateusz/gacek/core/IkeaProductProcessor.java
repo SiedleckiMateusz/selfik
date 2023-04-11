@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Component
 public class IkeaProductProcessor {
 
-    public Result getProductsToPrepareAndExtraOrder(ProductsContainer container) {
+    public Result getL23AndPrenotProducts(ProductsContainer container) {
         List<IkeaProduct> ikeaProducts = new ArrayList<>(container.getIkeaProductMap().values());
         List<PrenotProduct> prenotProducts = new ArrayList<>(container.getPrenotProductMap().values());
 
@@ -20,11 +20,11 @@ public class IkeaProductProcessor {
 
         List<IkeaProduct> inPrenotProducts = getPrenotProducts(ikeaProducts);
 
-        List<IkeaProduct> toPrepareFromPrenot = getProductsToPreparePlaces(inPrenotProducts);
+        List<IkeaProduct> toPrepareFromPrenot = findProductsToPreparePlaces(inPrenotProducts);
         List<IkeaProduct> toCheckComingBackProducts = getComingBackProductsToCheck(inPrenotProducts,container.getLocations());
         toPrepareFromPrenot.addAll(toCheckComingBackProducts);
 
-        Result result = getProductsToOrderAndPrepare(ikeaProducts);
+        Result result = getL23Products(ikeaProducts);
         result.addToPrepare(toPrepareFromPrenot);
 
         return result;
@@ -32,9 +32,7 @@ public class IkeaProductProcessor {
 
     private List<IkeaProduct> getComingBackProductsToCheck(List<IkeaProduct> inPrenotProducts, Set<LocationsWithProducts> locations) {
         Set<String> multiLocations = locations.stream().filter(lwp ->
-                        !lwp.getLocationName().endsWith("10") &&
-                                !lwp.getLocationName().startsWith("A") &&
-                                lwp.getArtilceIds().size() > 1)
+                        !endsWith10(lwp.getLocationName()) && !startWithA(lwp) && moreThanOneAtLocation(lwp))
                 .map(LocationsWithProducts::getLocationName).collect(Collectors.toSet());
 
         List<IkeaProduct> result = inPrenotProducts.stream()
@@ -50,6 +48,18 @@ public class IkeaProductProcessor {
                 .collect(Collectors.toList());
         result.forEach(ip->ip.setStatus(ProductStatus.WRACA_PO_NIEDOSTEPNOSCI));
         return result;
+    }
+
+    private boolean moreThanOneAtLocation(LocationsWithProducts lwp) {
+        return lwp.getArtilceIds().size() > 1;
+    }
+
+    private boolean startWithA(LocationsWithProducts lwp) {
+        return lwp.getLocationName().startsWith("A");
+    }
+
+    private boolean endsWith10(String locationName) {
+        return locationName.endsWith("10");
     }
 
     private List<IkeaProduct> getPrenotProducts(List<IkeaProduct> ikeaProducts) {
@@ -70,31 +80,30 @@ public class IkeaProductProcessor {
         });
     }
 
-    public Result getProductsToOrderAndPrepare(List<IkeaProduct> ikeaProducts) {
-        List<IkeaProduct> productsToOrder = getProductsToOrder(ikeaProducts);
-        List<IkeaProduct> productListToPrepare = getProductsToPreparePlaces(productsToOrder);
-
-        return new Result(ikeaProducts,productsToOrder,productListToPrepare);
+    public Result getL23Products(List<IkeaProduct> allIkeaProducts) {
+        List<IkeaProduct> L23productsToOrder = getProductsl23ToOrder(allIkeaProducts);
+        List<IkeaProduct> L23productsToPrepare = findProductsToPreparePlaces(L23productsToOrder);
+        return new Result(allIkeaProducts,L23productsToOrder,L23productsToPrepare);
     }
 
-    public List<IkeaProduct> getProductsToOrder(List<IkeaProduct> ikeaProducts) {
+    public List<IkeaProduct> getProductsl23ToOrder(List<IkeaProduct> ikeaProducts) {
         List<IkeaProduct> resultProducts = new ArrayList<>();
         for (IkeaProduct product : ikeaProducts) {
             if (product.l23OrderToFullPal() >= 1) {
                 if (product.getSgf() > 0) {
-                    resultProducts.add(product);
+//                    resultProducts.add(product);
                 }
             }
         }
         return resultProducts;
     }
 
-    public List<IkeaProduct> getProductsToPreparePlaces(List<IkeaProduct> inPrenotProducts) {
+    public List<IkeaProduct> findProductsToPreparePlaces(List<IkeaProduct> inPrenotProducts) {
         List<IkeaProduct> resultProducts = new ArrayList<>();
 
         for (IkeaProduct product : inPrenotProducts) {
             if (product.getLocations().size() > 1) {
-                if (!allLocationsHave10Level(product.getLocations())) {
+                if (isAnyZeroLevel(product.getLocations())) {
                     product.setStatus(ProductStatus.DO_PRZERZUCENIA);
                     resultProducts.add(product);
                 }
@@ -109,12 +118,12 @@ public class IkeaProductProcessor {
         return resultProducts;
     }
 
-    private boolean allLocationsHave10Level(Set<Location> locations) {
+    private boolean isAnyZeroLevel(Set<Location> locations) {
         for (Location location : locations) {
-            if (!location.getName().endsWith("10")) {
-                return false;
+            if (location.getName().endsWith("00")) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }

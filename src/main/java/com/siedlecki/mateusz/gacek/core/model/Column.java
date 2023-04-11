@@ -13,6 +13,10 @@ public class Column {
     private Integer index;
     private String name;
 
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     @Override
     public String toString() {
         return "ColumnInFile{" +

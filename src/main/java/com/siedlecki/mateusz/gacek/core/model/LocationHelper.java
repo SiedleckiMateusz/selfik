@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class LocationHelper {
-    private final int index;
+    private final Integer index;
     private final String location;
 }

@@ -10,14 +10,12 @@ import lombok.Setter;
 public class ProcessFlags {
     private boolean SLM0003IsOkFlag;
     private boolean prenotIsOkFlag;
-    private boolean opqIsOkFlag;
 
     private boolean prenotProcessFlag;
     private boolean morningProcessFlag;
 
     public void reset(){
         SLM0003IsOkFlag = false;
-        opqIsOkFlag = false;
         prenotIsOkFlag = false;
 
         prenotProcessFlag = false;

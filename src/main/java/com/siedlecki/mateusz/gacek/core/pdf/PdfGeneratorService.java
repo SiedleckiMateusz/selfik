@@ -61,7 +61,7 @@ public class PdfGeneratorService {
     }
 
     private List<List<String>> getValArtL23(Result result){
-        List<IkeaProduct> l23 = result.getToOrder().stream()
+        List<IkeaProduct> l23 = result.getToL23Order().stream()
                 .sorted(Comparator.comparing(ikeaProduct -> ikeaProduct.getMainLocation().getName()))
                 .collect(Collectors.toList());
         List<List<String>> listOfValues = new ArrayList<>();

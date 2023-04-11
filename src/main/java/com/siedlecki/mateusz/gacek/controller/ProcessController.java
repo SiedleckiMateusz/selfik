@@ -61,7 +61,7 @@ public class ProcessController {
     public String summary(Model model) {
         if (flags.isActiveAnyProcess()){
             model.addAttribute("toPrepare", result.getToPrepare());
-            model.addAttribute("l23List", result.getToOrder());
+            model.addAttribute("l23List", result.getToL23Order());
             return "summary";
         }
         return "redirect:/";
@@ -83,11 +83,8 @@ public class ProcessController {
         if (!flags.isSLM0003IsOkFlag()) {
             return "redirect:/slm0003-form";
         }
-        if (!flags.isOpqIsOkFlag()) {
-            return "redirect:/opq-form";
-        }
 
-        result = service.getProductsToOrderAndPrepare(container.getIkeaProductMap());
+        result = service.getL23Products(container.getIkeaProductMap());
 
         return "redirect:/summary";
     }
@@ -98,13 +95,10 @@ public class ProcessController {
         if (!flags.isSLM0003IsOkFlag()) {
             return "redirect:/slm0003-form";
         }
-        if (!flags.isOpqIsOkFlag()) {
-            return "redirect:/opq-form";
-        }
         if (!flags.isPrenotIsOkFlag()) {
             return "redirect:/prenot-form";
         }
-        result = service.getProductsToOrderAndPrepare(container);
+        result = service.getL23AndPrenotProducts(container);
 
 
         return "redirect:/summary";
@@ -116,16 +110,6 @@ public class ProcessController {
             model.addAttribute("flags", flags);
             log.info("Go to SLM0003 formula");
             return "form/slm0003Form";
-        }
-        return "redirect:/";
-    }
-
-    @GetMapping("opq-form")
-    public String opqForm(Model model) {
-        if (flags.isPrenotProcessFlag() || flags.isMorningProcessFlag()) {
-            model.addAttribute("flags", flags);
-            log.info("Go to OPQ formula");
-            return "form/opqForm";
         }
         return "redirect:/";
     }
@@ -150,21 +134,6 @@ public class ProcessController {
             log.info("Set slm0003Flag on true");
         } catch (IOException e) {
             return "redirect:/slm0003-form?error";
-        }
-
-        return process();
-    }
-
-    @PostMapping("opq-file")
-    public String processOpq(@RequestAttribute("opq") MultipartFile opq) {
-        try {
-            log.info("Recive OPQ file");
-            container.setIkeaProductMap(service.processOpq(opq, container.getIkeaProductMap(), getDaysToPick()));
-            log.info("Processed OPQ file");
-            flags.setOpqIsOkFlag(true);
-            log.info("Set OpqFlag on true");
-        } catch (IOException e) {
-            return "redirect:/opq-form?error";
         }
 
         return process();
@@ -253,16 +222,6 @@ public class ProcessController {
         container.setPrenotProductMap(null);
         container.setLocations(null);
         fileWriter = null;
-    }
-
-    private int getDaysToPick() {
-        if (flags.isPrenotProcessFlag()) {
-            return 2;
-        }
-        if (flags.isMorningProcessFlag()) {
-            return 1;
-        }
-        throw new IllegalStateException("prenot and morning Process flags are false! I don't know how many days to pick choose");
     }
 
     private ResponseEntity<ByteArrayResource> sendReadyFile(XlsxFileWriter result) throws IOException {

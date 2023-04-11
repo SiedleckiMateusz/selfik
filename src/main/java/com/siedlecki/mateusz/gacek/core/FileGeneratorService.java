@@ -1,6 +1,5 @@
 package com.siedlecki.mateusz.gacek.core;
 
-import com.siedlecki.mateusz.gacek.core.mapper.OpqMapper;
 import com.siedlecki.mateusz.gacek.core.mapper.PrenotMapper;
 import com.siedlecki.mateusz.gacek.core.mapper.Slm00003Mapper;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
@@ -22,13 +21,11 @@ import static com.siedlecki.mateusz.gacek.core.SheetContentGenerator.*;
 public class FileGeneratorService {
     private final SheetReader slm0003Reader;
     private final SheetReader prenotReader;
-    private final SheetReader opqReader;
     private final IkeaProductProcessor ikeaProductProcessor;
 
     {
         slm0003Reader = SheetReaderFactory.getSlm0003Reader();
         prenotReader = SheetReaderFactory.getPrenotReader();
-        opqReader = SheetReaderFactory.getOpqReader();
     }
 
     public FileGeneratorService(IkeaProductProcessor ikeaProductProcessor) {
@@ -36,47 +33,35 @@ public class FileGeneratorService {
     }
 
     public void processSlm0003file(MultipartFile slm0003File,ProductsContainer container) throws IOException {
-        Sheet slm0003Sheet = slm0003Reader.getSheetFromFile(slm0003File);
-        Slm00003Mapper.mapToProductsMap(slm0003Sheet,container);
+        Sheet slm0003Sheet = slm0003Reader.getCorrectSheetFromFile(slm0003File);
+        Slm00003Mapper slm00003Mapper = new Slm00003Mapper(slm0003Sheet);
+        container.setIkeaProductMap(slm00003Mapper.getProductMap());
+        container.setLocations(slm00003Mapper.getLocations());
     }
 
     public Map<String,PrenotProduct> processPrenotFile(MultipartFile prenotFile) throws IOException {
-        Sheet prenotSheet = prenotReader.getSheetFromFile(prenotFile);
+        Sheet prenotSheet = prenotReader.getCorrectSheetFromFile(prenotFile);
         return PrenotMapper.mapToPrenotProductMap(prenotSheet);
     }
 
-    public Map<String,IkeaProduct> processOpq(MultipartFile opqFile,Map<String,IkeaProduct>ikeaProductMap,int daysToPick) throws IOException {
-        Sheet opqSheet = opqReader.getSheetFromFile(opqFile);
-        return OpqMapper.processPickingProduct(opqSheet,ikeaProductMap,daysToPick);
+    public Result getL23Products(Map<String,IkeaProduct> ikeaProductMap){
+        return ikeaProductProcessor.getL23Products(new ArrayList<>(ikeaProductMap.values()));
     }
 
-    public Result getProductsToOrderAndPrepare(Map<String,IkeaProduct> ikeaProductMap){
-        return ikeaProductProcessor.getProductsToOrderAndPrepare(new ArrayList<>(ikeaProductMap.values()));
+    public Result getL23AndPrenotProducts(ProductsContainer container){
+        return ikeaProductProcessor.getL23AndPrenotProducts(container);
     }
 
-    public Result getProductsToOrderAndPrepare(ProductsContainer container){
-        return ikeaProductProcessor.getProductsToPrepareAndExtraOrder(container);
-    }
-
-    public XlsxFileWriter generateXlsxFile(Result result,String fileName) throws IOException {
+    public XlsxFileWriter generateXlsxFile(Result result,String fileName) {
         XlsxFileWriter writer = new XlsxFileWriter(fileName);
         writer = writer.addSheet(toPrepareSheetValues(result.getToPrepare()),
                         TO_PREPARE_COLUMNS,"Places to prepare")
-                .addSheet(toOrderSheetValues(result.getToOrder()),
+                .addSheet(toOrderSheetValues(result.getToL23Order()),
                         TO_ORDER_COLUMNS,"L23 order")
                 .addSheet(allParamSheetValues(result.getAll()),
                         ALL_PARAM_COLUMNS,"All");
 
         return writer;
     }
-
-    /* ******************************************************************************* */
-
-
-//    private void saveOperationToStatistic(List<IkeaProduct> products,OperationType operationType) {
-//        SavedOperationsReaderAndWriter opSum = new SavedOperationsReaderAndWriter();
-//        OperationsResults operationsResults = new OperationsResults(LocalDateTime.now(), operationType, products);
-//        opSum.saveOperation(operationsResults);
-//    }
 
 }

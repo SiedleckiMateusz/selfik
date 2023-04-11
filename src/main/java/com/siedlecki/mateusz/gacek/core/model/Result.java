@@ -3,7 +3,6 @@ package com.siedlecki.mateusz.gacek.core.model;
 import com.siedlecki.mateusz.gacek.core.FirstLocationComparator;
 import lombok.Getter;
 
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,12 +10,12 @@ import java.util.stream.Collectors;
 @Getter
 public class Result {
     private final List<IkeaProduct> all;
-    private final List<IkeaProduct> toOrder;
+    private final List<IkeaProduct> toL23Order;
     private List<IkeaProduct> toPrepare;
 
-    public Result(List<IkeaProduct> all, List<IkeaProduct> toOrder, List<IkeaProduct> toPrepare) {
+    public Result(List<IkeaProduct> all, List<IkeaProduct> toL23Order, List<IkeaProduct> toPrepare) {
         this.all = all.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
-        this.toOrder = toOrder.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
+        this.toL23Order = toL23Order.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
         this.toPrepare = toPrepare.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
     }
 
