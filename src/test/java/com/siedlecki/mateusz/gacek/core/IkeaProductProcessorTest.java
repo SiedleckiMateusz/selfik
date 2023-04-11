@@ -41,7 +41,7 @@ class IkeaProductProcessorTest {
                 .prenotSales(100)
                 .build());
         //when
-        List<IkeaProduct> result = cut.getProductsl23ToOrder(products);
+        List<IkeaProduct> result = cut.getProductsL23ToOrder(products);
         //then
         assertEquals(2, products.size());
         assertFalse(result.isEmpty());
@@ -75,7 +75,7 @@ class IkeaProductProcessorTest {
                 .prenotSales(0)
                 .build());
         //when
-        List<IkeaProduct> productsToOrder = cut.getProductsl23ToOrder(products);
+        List<IkeaProduct> productsToOrder = cut.getProductsL23ToOrder(products);
         List<IkeaProduct> result = cut.findProductsToPreparePlaces(productsToOrder);
         //then
         assertEquals(2, products.size());

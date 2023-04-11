@@ -81,17 +81,17 @@ public class IkeaProductProcessor {
     }
 
     public Result getL23Products(List<IkeaProduct> allIkeaProducts) {
-        List<IkeaProduct> L23productsToOrder = getProductsl23ToOrder(allIkeaProducts);
+        List<IkeaProduct> L23productsToOrder = getProductsL23ToOrder(allIkeaProducts);
         List<IkeaProduct> L23productsToPrepare = findProductsToPreparePlaces(L23productsToOrder);
         return new Result(allIkeaProducts,L23productsToOrder,L23productsToPrepare);
     }
 
-    public List<IkeaProduct> getProductsl23ToOrder(List<IkeaProduct> ikeaProducts) {
+    public List<IkeaProduct> getProductsL23ToOrder(List<IkeaProduct> ikeaProducts) {
         List<IkeaProduct> resultProducts = new ArrayList<>();
         for (IkeaProduct product : ikeaProducts) {
             if (product.l23OrderToFullPal() >= 1) {
                 if (product.getSgf() > 0) {
-//                    resultProducts.add(product);
+                    resultProducts.add(product);
                 }
             }
         }

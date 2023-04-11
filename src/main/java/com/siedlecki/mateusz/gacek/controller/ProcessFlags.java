@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class ProcessFlags {
     private boolean SLM0003IsOkFlag;
+    private boolean iv020IsOkFlag;
     private boolean prenotIsOkFlag;
 
     private boolean prenotProcessFlag;
@@ -17,6 +18,7 @@ public class ProcessFlags {
     public void reset(){
         SLM0003IsOkFlag = false;
         prenotIsOkFlag = false;
+        iv020IsOkFlag = false;
 
         prenotProcessFlag = false;
         morningProcessFlag = false;

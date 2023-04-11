@@ -22,6 +22,7 @@ public class IkeaProduct {
     private Integer availableStock;
     private final Integer sgf;
     private final Double volume;
+    private int reserved;
     private int prenotSales;
     private int prenotBuffer;
     @Setter
@@ -30,7 +31,7 @@ public class IkeaProduct {
     private ProductStatus status;
 
     public int onSalePlaces() {
-        return availableStock + (pickingInfo != null ? pickingInfo.getQtyAfterDay() : 0) - sgf;
+        return availableStock + reserved - sgf;
     }
 
     public int freeSpace() {
@@ -56,10 +57,6 @@ public class IkeaProduct {
 
     public int freeSpaceAfterOrder() {
         return freeSpace() - l23Order();
-    }
-
-    public int freeSpaceBeforePrenot() {
-        return (assq - onSalePlaces());
     }
 
     public double prenotSalesPQ() {
@@ -109,6 +106,10 @@ public class IkeaProduct {
                     return o1.getName().compareTo(o2.getName());})
                 .map(Location::getName)
                 .collect(Collectors.toList()).toString();
+    }
+
+    public void addReserved(int reserved){
+        this.reserved+=reserved;
     }
 
     @Override

@@ -6,7 +6,7 @@
 </head>
 <body>
 <section>
-    <form action="/slm0003-file" method="post" enctype="multipart/form-data">
+    <form action="/iv020-file" method="post" enctype="multipart/form-data">
         <div th:if="${param.error}!= null" class="alert alert-danger alert-dismissible" role="alert" id="liveAlert">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                  class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
@@ -16,9 +16,9 @@
             <strong>Ej!</strong> Podałeś niepoprawny plik lub np. został edytowany i nie ogarniam... Spróbuj jeszcze raz
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="row"><label class="label text-light h2" for="slm0003">Plik SLM0003:</label></div>
+        <div class="row"><label class="label text-light h2" for="iv020">Plik IV020:</label></div>
         <div class="input-group">
-            <input type="file" class="form-control" accept=".xls,.xlsx" id="slm0003" name="slm0003"
+            <input type="file" class="form-control" accept=".xls,.xlsx" id="iv020" name="iv020"
                    aria-describedby="inputGroupFileAddon04" aria-label="Upload">
             <input class="btn btn-success" type="submit" id="inputGroupFileAddon04" value="DALEJ" name="submit">
         </div>
@@ -41,24 +41,27 @@
         <div class="col">
             <div class="card">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                        <img th:src="@{/img/slm003.JPG}" class="img-fluid rounded-start" alt="...">
+                    <div class="col-md-3">
+                        <img th:src="@{/img/IV020.JPG}" class="img-fluid rounded-start" alt="...">
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="card-body">
-                            <h5 class="card-title">Wrzuć listę <a href="https://app.powerbi.com/Redirect?action=OpenReport&appId=40ba3fca-b69f-4f21-a63b-ff2b819345ad&reportObjectId=351edcbd-5147-4021-8135-ce69a716d4d5&ctid=720b637a-655a-40cf-816a-f22f40755c2c&reportPage=ReportSection0fcdcc4d94f3eb50e81d&pbi_source=appShareLink&portalSessionId=d839047e-96a4-488f-80a0-fed3a835fea9" target="_blank">
-                                SLM003</a> z katalogu Sales Location Management</h5>
+                            <h5 class="card-title">Wrzuć listę <a href="https://app.powerbi.com/Redirect?action=OpenReport&appId=40ba3fca-b69f-4f21-a63b-ff2b819345ad&reportObjectId=4e48bd5b-0779-46cd-8708-aa2855486d7c&ctid=720b637a-655a-40cf-816a-f22f40755c2c&reportPage=ReportSection&pbi_source=appShareLink&portalSessionId=d839047e-96a4-488f-80a0-fed3a835fea9" target="_blank">
+                                IV020</a> z katalogu Stock Information</h5>
                             <p class="card-text">Pobierz aktualną listę i wczytaj ją powyżej. Pamiętaj o poprawnym
-                                generowaniu listy. Jeśli nie wiesz jak to zrobić kliknij <a
-                                        th:href="instruction" target="_blank">tutaj</a></p>
-                            <div class="alert alert-danger" role="alert">Uwaga! Przy generowaniu wybierz DIV tylko SF,
-                                ponieważ plik ze wszystkimi dywizjami jest za duży.
+                                generowaniu listy. Jeśli nie wiesz jak to zrobić
+                                <a th:href="instruction" target="_blank">sprwadź w instrukcji</a></p>
+                            <div class="alert alert-danger" role="alert">Uwaga! Przy generowaniu wybierz z filtrów po
+                                prawej stronie SALESMETHOD równe 1, oraz QTYRESERVEDINSTOCK większa niż 0,
                             </div>
                             <p class="card-text">Tą listę potrzebuję, aby sprawdzić aktualne parametry artykułów na
                                 magazynie</p>
                             <p class="card-text"><small class="text-muted">Jak wrzucisz listę i klikniesz DALEJ,
                                 poczekaj cierpliwie aż to przetrawię</small></p>
                         </div>
+                    </div>
+                    <div class="col-md-3">
+                        <img th:src="@{/img/iv020_filtry.JPG}" class="img-fluid rounded-start" alt="...">
                     </div>
                 </div>
             </div>

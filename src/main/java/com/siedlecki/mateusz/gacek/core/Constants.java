@@ -14,6 +14,9 @@ public class Constants {
     public static int SLM0003_ROW_INDEX = 2;
     public static Set<IgnoredSlm003Value> SLM0003_IGNORED_VALUES = new HashSet<>();
 
+    public static String IV020_SHEET_NAME = "Sheet1";
+    public static int IV020_ROW_INDEX = 2;
+
     public static String PRENOT_SHEET_NAME = "SSFA";
     public static int PRENOT_ROW_INDEX = 1;
 

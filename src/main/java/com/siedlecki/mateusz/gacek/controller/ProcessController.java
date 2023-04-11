@@ -83,7 +83,9 @@ public class ProcessController {
         if (!flags.isSLM0003IsOkFlag()) {
             return "redirect:/slm0003-form";
         }
-
+        if (!flags.isIv020IsOkFlag()) {
+            return "redirect:/iv020-form";
+        }
         result = service.getL23Products(container.getIkeaProductMap());
 
         return "redirect:/summary";
@@ -94,6 +96,9 @@ public class ProcessController {
         flags.setPrenotProcessFlag(true);
         if (!flags.isSLM0003IsOkFlag()) {
             return "redirect:/slm0003-form";
+        }
+        if (!flags.isIv020IsOkFlag()) {
+            return "redirect:/iv020-form";
         }
         if (!flags.isPrenotIsOkFlag()) {
             return "redirect:/prenot-form";
@@ -114,6 +119,16 @@ public class ProcessController {
         return "redirect:/";
     }
 
+    @GetMapping("iv020-form")
+    public String iv020Form(Model model) {
+        if (flags.isPrenotProcessFlag() || flags.isMorningProcessFlag()) {
+            model.addAttribute("flags", flags);
+            log.info("Go to IV020 formula");
+            return "form/iv020Form";
+        }
+        return "redirect:/";
+    }
+
     @GetMapping("prenot-form")
     public String prenotForm(Model model) {
         if (flags.isPrenotProcessFlag()) {
@@ -128,7 +143,7 @@ public class ProcessController {
     public String processSLM0003(@RequestAttribute("slm0003") MultipartFile slm0003) {
         try {
             log.info("Recive slm0003 file");
-            service.processSlm0003file(slm0003,container);
+            service.processSlm0003File(slm0003,container);
             log.info("Processed slm0003 file");
             flags.setSLM0003IsOkFlag(true);
             log.info("Set slm0003Flag on true");
@@ -136,6 +151,20 @@ public class ProcessController {
             return "redirect:/slm0003-form?error";
         }
 
+        return process();
+    }
+
+    @PostMapping("iv020-file")
+    public String processIV020(@RequestAttribute("iv020") MultipartFile iv020) {
+        try {
+            log.info("Recive iv020 file");
+            service.processIV002File(iv020,container);
+            log.info("Processed iv020 file");
+            flags.setIv020IsOkFlag(true);
+            log.info("Set iv020Flag on true");
+        } catch (IOException e) {
+            return "redirect:/iv020-form?error";
+        }
         return process();
     }
 

@@ -78,7 +78,7 @@ public class SheetContentGenerator {
                     String.format("%.2f", product.l23OrderPQ()),
                     String.valueOf(product.l23OrderToFullPal()),
                     String.valueOf(product.freeSpaceAfterOrder()),
-                    String.valueOf(product.getPickingInfo()!=null?product.getPickingInfo().getQtyToOrder():"0")
+                    String.valueOf(product.getReserved())
             });
         }
         return result;
