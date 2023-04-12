@@ -64,9 +64,7 @@ public class FileGeneratorService {
     public XlsxFileWriter generateXlsxFile(Result result,String fileName) {
         XlsxFileWriter writer = new XlsxFileWriter(fileName);
         writer = writer.addSheet(toPrepareSheetValues(result.getToPrepare()),
-                        TO_PREPARE_COLUMNS,"Places to prepare")
-                .addSheet(toOrderSheetValues(result.getToL23Order()),
-                        TO_ORDER_COLUMNS,"L23 order")
+                        TO_PREPARE_COLUMNS,"Preparing")
                 .addSheet(allParamSheetValues(result.getAll()),
                         ALL_PARAM_COLUMNS,"All");
 

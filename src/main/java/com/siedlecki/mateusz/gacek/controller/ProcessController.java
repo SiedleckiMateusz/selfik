@@ -21,7 +21,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,7 +60,6 @@ public class ProcessController {
     public String summary(Model model) {
         if (flags.isActiveAnyProcess()){
             model.addAttribute("toPrepare", result.getToPrepare());
-            model.addAttribute("l23List", result.getToL23Order());
             return "summary";
         }
         return "redirect:/";
@@ -190,7 +188,7 @@ public class ProcessController {
     }
 
     @GetMapping("generate-excel-file")
-    public ResponseEntity<?> generateFile() {
+    public ResponseEntity<?> generateExcelFile() {
         try {
             if (flags.isMorningProcessFlag()) {
                 String fileName = "Seflik rano " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm")) + ".xlsx";
@@ -212,22 +210,22 @@ public class ProcessController {
     }
 
     @GetMapping("generate-pdf")
-    public String checkIfCanGeneratePdfFile(@RequestParam(name = "l23", required = false) boolean l23){
+    public String checkIfCanGeneratePdfFile(){
         if (flags.isActiveAnyProcess()){
-            return "redirect:/generate-pdf-file?l23="+l23;
+            return "redirect:/generate-pdf-file";
         }
         return "redirect:/";
     }
 
     @GetMapping("generate-pdf-file")
-    public ResponseEntity<?> printing(@RequestParam(name = "l23",required = false) boolean l23) {
+    public ResponseEntity<?> printing() {
         Document document = new Document(PageSize.A4.rotate(),20,20,20,20);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             PdfWriter instance = PdfWriter.getInstance(document, outputStream);
             document.open();
             PdfGeneratorService pdfGeneratorService = new PdfGeneratorService();
-            pdfGeneratorService.generatePrenotDocument(document,instance,result,l23);
+            pdfGeneratorService.generatePrenotDocument(document,instance,result);
             document.close();
         } catch (DocumentException | IOException e) {
             System.err.println(e.getMessage());

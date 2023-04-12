@@ -2,6 +2,7 @@ package com.siedlecki.mateusz.gacek.core;
 
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.Location;
+import com.siedlecki.mateusz.gacek.core.model.ProductStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,11 +77,11 @@ class IkeaProductProcessorTest {
                 .build());
         //when
         List<IkeaProduct> productsToOrder = cut.getProductsL23ToOrder(products);
-        List<IkeaProduct> result = cut.findProductsToPreparePlaces(productsToOrder);
+        cut.findProductsToPreparePlaces(productsToOrder, ProductStatus.DO_PRZYGOTOWANIA);
         //then
         assertEquals(2, products.size());
-        assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
+        assertFalse(productsToOrder.isEmpty());
+        assertEquals(1, productsToOrder.size());
     }
 
 

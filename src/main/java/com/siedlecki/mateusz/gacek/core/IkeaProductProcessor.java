@@ -16,12 +16,12 @@ public class IkeaProductProcessor {
         List<IkeaProduct> ikeaProducts = new ArrayList<>(container.getIkeaProductMap().values());
         List<PrenotProduct> prenotProducts = new ArrayList<>(container.getPrenotProductMap().values());
 
-        setParametersFromPrenotToProducts(ikeaProducts,prenotProducts);
+        setParametersFromPrenotToProducts(ikeaProducts, prenotProducts);
 
         List<IkeaProduct> inPrenotProducts = getPrenotProducts(ikeaProducts);
 
-        List<IkeaProduct> toPrepareFromPrenot = findProductsToPreparePlaces(inPrenotProducts);
-        List<IkeaProduct> toCheckComingBackProducts = getComingBackProductsToCheck(inPrenotProducts,container.getLocations());
+        List<IkeaProduct> toPrepareFromPrenot = findProductsToPreparePlaces(inPrenotProducts, ProductStatus.DO_PRZYGOTOWANIA);
+        List<IkeaProduct> toCheckComingBackProducts = getComingBackProductsToCheck(inPrenotProducts, container.getLocations());
         toPrepareFromPrenot.addAll(toCheckComingBackProducts);
 
         Result result = getL23Products(ikeaProducts);
@@ -46,7 +46,7 @@ public class IkeaProductProcessor {
                     return false;
                 })
                 .collect(Collectors.toList());
-        result.forEach(ip->ip.setStatus(ProductStatus.WRACA_PO_NIEDOSTEPNOSCI));
+        result.forEach(ip -> ip.setStatus(ProductStatus.WRACA_PO_NIEDOSTEPNOSCI));
         return result;
     }
 
@@ -82,15 +82,17 @@ public class IkeaProductProcessor {
 
     public Result getL23Products(List<IkeaProduct> allIkeaProducts) {
         List<IkeaProduct> L23productsToOrder = getProductsL23ToOrder(allIkeaProducts);
-        List<IkeaProduct> L23productsToPrepare = findProductsToPreparePlaces(L23productsToOrder);
-        return new Result(allIkeaProducts,L23productsToOrder,L23productsToPrepare);
+        findProductsToPreparePlaces(L23productsToOrder, ProductStatus.SPR_L23_DO_PRZERZUCENIA);
+        return new Result(allIkeaProducts, L23productsToOrder);
     }
 
     public List<IkeaProduct> getProductsL23ToOrder(List<IkeaProduct> ikeaProducts) {
         List<IkeaProduct> resultProducts = new ArrayList<>();
         for (IkeaProduct product : ikeaProducts) {
-            if (product.l23OrderToFullPal() >= 1) {
-                if (product.getSgf() > 0) {
+            if (product.getSgf() > 0) {
+                boolean couldFindSpaceWithReservation = product.freeSpace() + product.getReserved() > product.getPalQty();
+                if (product.l23OrderToFullPal() >= 1 || couldFindSpaceWithReservation) {
+                    product.setStatus(ProductStatus.SPR_L23);
                     resultProducts.add(product);
                 }
             }
@@ -98,19 +100,19 @@ public class IkeaProductProcessor {
         return resultProducts;
     }
 
-    public List<IkeaProduct> findProductsToPreparePlaces(List<IkeaProduct> inPrenotProducts) {
+    public List<IkeaProduct> findProductsToPreparePlaces(List<IkeaProduct> inPrenotProducts, ProductStatus status) {
         List<IkeaProduct> resultProducts = new ArrayList<>();
 
         for (IkeaProduct product : inPrenotProducts) {
             if (product.getLocations().size() > 1) {
                 if (isAnyZeroLevel(product.getLocations())) {
-                    product.setStatus(ProductStatus.DO_PRZERZUCENIA);
+                    product.setStatus(status);
                     resultProducts.add(product);
                 }
             } else {
                 double pallets = (double) product.getAssq() / product.getPalQty();
                 if (pallets >= 2) {
-                    product.setStatus(ProductStatus.DO_PRZERZUCENIA);
+                    product.setStatus(status);
                     resultProducts.add(product);
                 }
             }

@@ -10,12 +10,10 @@ import java.util.stream.Collectors;
 @Getter
 public class Result {
     private final List<IkeaProduct> all;
-    private final List<IkeaProduct> toL23Order;
     private List<IkeaProduct> toPrepare;
 
-    public Result(List<IkeaProduct> all, List<IkeaProduct> toL23Order, List<IkeaProduct> toPrepare) {
+    public Result(List<IkeaProduct> all, List<IkeaProduct> toPrepare) {
         this.all = all.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
-        this.toL23Order = toL23Order.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
         this.toPrepare = toPrepare.stream().sorted(Comparator.comparing(o -> o.getMainLocation().getName())).collect(Collectors.toList());
     }
 
@@ -23,7 +21,6 @@ public class Result {
         if (toPrepare != null) {
             this.toPrepare.addAll(toPrepare);
             this.toPrepare = this.toPrepare.stream()
-                    .distinct()
                     .sorted(new FirstLocationComparator())
                     .collect(Collectors.toList());
         }

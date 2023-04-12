@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PdfGeneratorService {
-    public void generatePrenotDocument(Document document, PdfWriter instance, Result result, boolean printL23) throws DocumentException, IOException {
+
+    public void generatePrenotDocument(Document document, PdfWriter instance, Result result) throws DocumentException, IOException {
         PdfGenerator generator = new PdfGenerator(document,instance);
         generator.generatePageWithTable(
                 false,
@@ -31,15 +32,6 @@ public class PdfGeneratorService {
                 Constants.HEADERS_FOR_TO_PREPARE_PDF,
                 Constants.COLUMNS_SIZE_FOR_TO_PREPARE_PDF
         );
-        if (printL23){
-            generator.generatePageWithTable(
-                    true,
-                    "L23",
-                    getValArtL23(result),
-                    Constants.HEADERS_FOR_L23_PDF,
-                    Constants.COLUMNS_SIZE_FOR_L23_PDF
-            );
-        }
     }
 
     private List<List<String>> getValArtToPrepareFromOneSpecshop(Result result, Specshop specshop){
@@ -53,28 +45,21 @@ public class PdfGeneratorService {
             values.add(p.getId());
             values.add(p.getName());
             values.add(p.locationsToString());
-            values.add(String.format("%.2f",(double)p.l23OrderToFullPal()+p.prenotSalesPQ()));
+            values.add(p.getPalQty().toString());
+            values.add(getQtyToOrderOrPropably(p));
             values.add(p.getStatus().getOpis());
             listOfValues.add(values);
         }
         return listOfValues;
     }
 
-    private List<List<String>> getValArtL23(Result result){
-        List<IkeaProduct> l23 = result.getToL23Order().stream()
-                .sorted(Comparator.comparing(ikeaProduct -> ikeaProduct.getMainLocation().getName()))
-                .collect(Collectors.toList());
-        List<List<String>> listOfValues = new ArrayList<>();
-        for (IkeaProduct p:l23){
-            List<String> values = new ArrayList<>();
-            values.add(p.getName());
-            values.add(p.getId());
-            values.add(String.format("%.2f",(double)p.l23OrderToFullPal()));
-            values.add(String.format("%.2f",p.prenotSalesPQ()));
-            values.add(String.valueOf(p.l23AndPrenotOrderPalToQty()));
-            listOfValues.add(values);
+    private String getQtyToOrderOrPropably(IkeaProduct p) {
+        double v = (double) p.l23OrderToFullPal() + p.prenotSalesPQ();
+        if (v>0) {
+            return String.format("%.2f", v);
         }
-        return listOfValues;
+        int i = (p.l23Order() + p.getReserved()) / p.getPalQty();
+        return String.format("%.2f", (double)i);
     }
 
 }
