@@ -4,9 +4,9 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.siedlecki.mateusz.gacek.core.FileGeneratorService;
-import com.siedlecki.mateusz.gacek.core.ProductsContainer;
-import com.siedlecki.mateusz.gacek.core.XlsxFileWriter;
+import com.siedlecki.mateusz.gacek.core.xlsx.XlsGeneratorService;
+import com.siedlecki.mateusz.gacek.core.model.ProductsContainer;
+import com.siedlecki.mateusz.gacek.core.xlsx.XlsxFileWriter;
 import com.siedlecki.mateusz.gacek.core.model.Result;
 import com.siedlecki.mateusz.gacek.core.pdf.PdfGeneratorService;
 import org.slf4j.Logger;
@@ -39,11 +39,11 @@ public class ProcessController {
 
     private final ProcessFlags flags;
 
-    private final FileGeneratorService service;
+    private final XlsGeneratorService service;
 
     private static final Logger log = LoggerFactory.getLogger(ProcessController.class);
 
-    public ProcessController(FileGeneratorService service) {
+    public ProcessController(XlsGeneratorService service) {
         this.flags = new ProcessFlags();
         this.service = service;
     }

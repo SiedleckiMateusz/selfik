@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class IkeaProductProcessor {
+public class IkeaProductService {
 
     public Result getL23AndPrenotProducts(ProductsContainer container) {
         List<IkeaProduct> ikeaProducts = new ArrayList<>(container.getIkeaProductMap().values());
@@ -21,8 +21,8 @@ public class IkeaProductProcessor {
         List<IkeaProduct> inPrenotProducts = getPrenotProducts(ikeaProducts);
 
         List<IkeaProduct> toPrepareFromPrenot = findProductsToPreparePlaces(inPrenotProducts, ProductStatus.DO_PRZYGOTOWANIA);
-        List<IkeaProduct> toCheckComingBackProducts = getComingBackProductsToCheck(inPrenotProducts, container.getLocations());
-        toPrepareFromPrenot.addAll(toCheckComingBackProducts);
+        List<IkeaProduct> comingBackProductsToCheck = getComingBackProductsToCheck(inPrenotProducts, container.getLocations());
+        toPrepareFromPrenot.addAll(comingBackProductsToCheck);
 
         Result result = getL23Products(ikeaProducts);
         result.addToPrepare(toPrepareFromPrenot);
@@ -32,7 +32,9 @@ public class IkeaProductProcessor {
 
     private List<IkeaProduct> getComingBackProductsToCheck(List<IkeaProduct> inPrenotProducts, Set<LocationsWithProducts> locations) {
         Set<String> multiLocations = locations.stream().filter(lwp ->
-                        !endsWith10(lwp.getLocationName()) && !startWithA(lwp) && moreThanOneAtLocation(lwp))
+                        !endsWith10(lwp.getLocationName()) &&
+                                !startWithA(lwp) &&
+                                moreThanOneAtLocation(lwp))
                 .map(LocationsWithProducts::getLocationName).collect(Collectors.toSet());
 
         List<IkeaProduct> result = inPrenotProducts.stream()

@@ -1,10 +1,12 @@
-package com.siedlecki.mateusz.gacek.core;
+package com.siedlecki.mateusz.gacek.core.xlsx;
 
+import com.siedlecki.mateusz.gacek.core.IkeaProductService;
 import com.siedlecki.mateusz.gacek.core.mapper.Iv020Mapper;
 import com.siedlecki.mateusz.gacek.core.mapper.PrenotMapper;
 import com.siedlecki.mateusz.gacek.core.mapper.Slm00003Mapper;
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.PrenotProduct;
+import com.siedlecki.mateusz.gacek.core.model.ProductsContainer;
 import com.siedlecki.mateusz.gacek.core.model.Result;
 import com.siedlecki.mateusz.gacek.core.reader.SheetReader;
 import com.siedlecki.mateusz.gacek.core.reader.SheetReaderFactory;
@@ -16,14 +18,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.siedlecki.mateusz.gacek.core.SheetContentGenerator.*;
+import static com.siedlecki.mateusz.gacek.core.xlsx.XlsxSheetContentGenerator.*;
 
 @Service
-public class FileGeneratorService {
+public class XlsGeneratorService {
     private final SheetReader slm0003Reader;
     private final SheetReader prenotReader;
     private final SheetReader iv020Reader;
-    private final IkeaProductProcessor ikeaProductProcessor;
+    private final IkeaProductService ikeaProductService;
 
     {
         slm0003Reader = SheetReaderFactory.getSlm0003Reader();
@@ -31,8 +33,8 @@ public class FileGeneratorService {
         iv020Reader = SheetReaderFactory.getIv020Reader();
     }
 
-    public FileGeneratorService(IkeaProductProcessor ikeaProductProcessor) {
-        this.ikeaProductProcessor = ikeaProductProcessor;
+    public XlsGeneratorService(IkeaProductService ikeaProductService) {
+        this.ikeaProductService = ikeaProductService;
     }
 
     public void processSlm0003File(MultipartFile slm0003File, ProductsContainer container) throws IOException {
@@ -54,14 +56,14 @@ public class FileGeneratorService {
     }
 
     public Result getL23Products(Map<String,IkeaProduct> ikeaProductMap){
-        return ikeaProductProcessor.getL23Products(new ArrayList<>(ikeaProductMap.values()));
+        return ikeaProductService.getL23Products(new ArrayList<>(ikeaProductMap.values()));
     }
 
     public Result getL23AndPrenotProducts(ProductsContainer container){
-        return ikeaProductProcessor.getL23AndPrenotProducts(container);
+        return ikeaProductService.getL23AndPrenotProducts(container);
     }
 
-    public XlsxFileWriter generateXlsxFile(Result result,String fileName) {
+    public XlsxFileWriter generateXlsxFile(Result result, String fileName) {
         XlsxFileWriter writer = new XlsxFileWriter(fileName);
         writer = writer.addSheet(toPrepareSheetValues(result.getToPrepare()),
                         TO_PREPARE_COLUMNS,"Preparing")

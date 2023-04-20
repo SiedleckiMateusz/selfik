@@ -1,4 +1,4 @@
-package com.siedlecki.mateusz.gacek.core;
+package com.siedlecki.mateusz.gacek.core.comparator;
 
 
 

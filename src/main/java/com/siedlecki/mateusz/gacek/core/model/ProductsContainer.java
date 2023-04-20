@@ -1,4 +1,4 @@
-package com.siedlecki.mateusz.gacek.core;
+package com.siedlecki.mateusz.gacek.core.model;
 
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 import com.siedlecki.mateusz.gacek.core.model.LocationsWithProducts;

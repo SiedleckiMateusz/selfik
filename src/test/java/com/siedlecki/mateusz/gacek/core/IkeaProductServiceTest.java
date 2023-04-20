@@ -12,13 +12,13 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class IkeaProductProcessorTest {
+class IkeaProductServiceTest {
 
-    private static IkeaProductProcessor cut;
+    private static IkeaProductService cut;
 
     @BeforeAll
     public static void initialize() {
-        cut = new IkeaProductProcessor();
+        cut = new IkeaProductService();
     }
 
     @Test

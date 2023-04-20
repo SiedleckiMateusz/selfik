@@ -1,4 +1,4 @@
-package com.siedlecki.mateusz.gacek.core;
+package com.siedlecki.mateusz.gacek.core.xlsx;
 
 import lombok.Getter;
 import org.apache.poi.xssf.usermodel.XSSFRow;

@@ -1,6 +1,6 @@
 package com.siedlecki.mateusz.gacek.core.model;
 
-import com.siedlecki.mateusz.gacek.core.FirstLocationComparator;
+import com.siedlecki.mateusz.gacek.core.comparator.FirstLocationComparator;
 import lombok.Getter;
 
 import java.util.Comparator;

@@ -1,11 +1,11 @@
-package com.siedlecki.mateusz.gacek.core;
+package com.siedlecki.mateusz.gacek.core.xlsx;
 
 import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SheetContentGenerator {
+public class XlsxSheetContentGenerator {
 
     public static String[] TO_PREPARE_COLUMNS = new String[]{
             "OBSZAR","REG","NR","NAME","SLID","PALETY","STATUS"
