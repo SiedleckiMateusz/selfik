@@ -8,7 +8,7 @@ public enum Slm003Column {
     DIV("DIV"),
     SPECSHOP("SPSHOP_NAME"),
     RANGE_GROUP("RG_DESC"),
-    NUMBER("ART"),
+    NUMBER("ARTNO"),
     NAME("ARTNAME_UNICODE"),
     SLID("SLID"),
     FCST("FCST"),
