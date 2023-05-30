@@ -24,8 +24,8 @@ public class Constants {
 
     public static String[] EXCEL_COLUMNS_NAMES;
 
-    public static float[] COLUMNS_SIZE_FOR_TO_PREPARE_PDF = new float[]{9,33,39,5,6,9};
-    public static List<String> HEADERS_FOR_TO_PREPARE_PDF = Arrays.asList("NR","NAZWA","SLID","PQ","ORDER","STATUS");
+    public static float[] COLUMNS_SIZE_FOR_TO_PREPARE_PDF = new float[]{9,5,6,9,33,39};
+    public static List<String> HEADERS_FOR_TO_PREPARE_PDF = Arrays.asList("NR","PQ","ORDER","STATUS","NAZWA","SLID");
 
     public static float[] COLUMNS_SIZE_FOR_L23_PDF = new float[]{61,9,10,10,10};
     public static List<String> HEADERS_FOR_L23_PDF = Arrays.asList("NAZWA","NR","L23[pal]","PRENOT[pal]","RAZEM [szt]");
