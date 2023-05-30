@@ -43,11 +43,11 @@ public class PdfGeneratorService {
         for (IkeaProduct p:nieparzyste){
             List<String> values = new ArrayList<>();
             values.add(p.getId());
-            values.add(p.getName());
-            values.add(p.locationsToString());
             values.add(p.getPalQty().toString());
             values.add(getQtyToOrderOrPropably(p));
             values.add(p.getStatus().getOpis());
+            values.add(p.getName());
+            values.add(p.locationsToString());
             listOfValues.add(values);
         }
         return listOfValues;
