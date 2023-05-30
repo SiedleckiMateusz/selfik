@@ -46,8 +46,8 @@ public class PdfGeneratorService {
             values.add(p.getPalQty().toString());
             values.add(getQtyToOrderOrPropably(p));
             values.add(p.getStatus().getOpis());
-            values.add(p.getName());
             values.add(p.locationsToString());
+            values.add(p.getName());
             listOfValues.add(values);
         }
         return listOfValues;
