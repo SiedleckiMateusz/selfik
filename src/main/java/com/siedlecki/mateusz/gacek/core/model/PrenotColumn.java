@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 public enum PrenotColumn {
-    NUMER("NUMER"),
-    DO("DO"),
-    ILOSC("ILOŚĆ");
+    NUMER("ART NO"),
+    DO("TO"),
+    ILOSC("QTY");
 
     private final String name;
     @Setter
