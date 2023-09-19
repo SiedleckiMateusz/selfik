@@ -52,9 +52,9 @@ public class Constants {
         SLM0003_IGNORED_VALUES.add(Column.builder().index(7).name("REC027").build());
         SLM0003_IGNORED_VALUES.add(Column.builder().index(7).name("BIZNES").build());
 
-        PRENOT_COLUMNS.add(Column.builder().index(1).name("NUMER").build());
-        PRENOT_COLUMNS.add(Column.builder().index(14).name("DO").build());
-        PRENOT_COLUMNS.add(Column.builder().index(15).name("ILOŚĆ").build());
+        PRENOT_COLUMNS.add(Column.builder().index(1).name("ART NO").build());
+        PRENOT_COLUMNS.add(Column.builder().index(14).name("TO").build());
+        PRENOT_COLUMNS.add(Column.builder().index(15).name("QTY").build());
 
         OPQ_COLUMNS.add(Column.builder().index(2).name("ARTNO").build());
         OPQ_COLUMNS.add(Column.builder().index(7).name("OPEN_PICK_QTY").build());
