@@ -2,27 +2,25 @@
 <html lang="pl" xmlns:th="http://www.thymeleaf.org"
       th:replace="fragments/general :: layout(~{::title}, ~{::section})">
 <head>
-    <title>Ładujemy listę OPQ</title>
-
+    <title>Ładujemy listę SLM0003</title>
 </head>
 <body>
 <section>
-    <form action="/opq-file" method="post" enctype="multipart/form-data">
+    <form action="/iv020-file" method="post" enctype="multipart/form-data">
         <div th:if="${param.error}!= null" class="alert alert-danger alert-dismissible" role="alert" id="liveAlert">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                  class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
-                 aria-label="Warning:">
+                 aria-label="Uwaga:">
                 <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
             </svg>
-            <strong>Ej!</strong> Podałeś niepoprawny plik lub został on edytowany i nie ogarniam... Spróbuj jeszcze raz
+            <strong>Ej!</strong> Podałeś niepoprawny plik lub np. został edytowany i nie ogarniam... Spróbuj jeszcze raz
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="row">
-            <label class="label text-light h2" for="opq">Lista Open pick quantity (OPQ_PG):</label></div>
+        <div class="row"><label class="label text-light h2" for="iv020">Plik IV020:</label></div>
         <div class="input-group">
-            <input type="file" class="form-control" accept=".xls,.xlsx" id="opq" name="opq"
+            <input type="file" class="form-control" accept=".xls,.xlsx" id="iv020" name="iv020"
                    aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-            <input class="btn btn-success" type="submit" id="inputGroupFileAddon04" value="NEXT" name="submit">
+            <input class="btn btn-success" type="submit" id="inputGroupFileAddon04" value="DALEJ" name="submit">
         </div>
     </form>
     <div class="row my-5">
@@ -31,42 +29,46 @@
                 <li th:class="'list-group-item '+ ${(flags!=null && flags.isSLM0003IsOkFlag())?'list-group-item-success':'list-group-item-light'}">
                     SLM0003
                 </li>
-                <li th:class="'list-group-item '+ ${(flags!=null && flags.isOpqIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
-                    OPQ
+                <li th:class="'list-group-item '+ ${(flags!=null && flags.isIv020IsOkFlag())?'list-group-item-success':'list-group-item-light'}">
+                    IV020
                 </li>
-
                 <li th:if="${flags!=null && flags.isPrenotProcessFlag()}"
                     th:class="'list-group-item '+ ${(flags!=null && flags.isPrenotIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
                     PRENOTYFIKACJE
                 </li>
-
             </ul>
         </div>
         <div class="col">
             <div class="card">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                        <img th:src="@{/img/opq.JPG}" class="img-fluid rounded-start" alt="...">
+                    <div class="col-md-3">
+                        <img th:src="@{/img/IV020.JPG}" class="img-fluid rounded-start" alt="...">
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="card-body">
-                            <h5 class="card-title">Wrzuć listę OPQ_PG z katalogu Picking Statistic Postgres</h5>
+                            <h5 class="card-title">Wrzuć listę <a href="https://app.powerbi.com/Redirect?action=OpenReport&appId=40ba3fca-b69f-4f21-a63b-ff2b819345ad&reportObjectId=4e48bd5b-0779-46cd-8708-aa2855486d7c&ctid=720b637a-655a-40cf-816a-f22f40755c2c&reportPage=ReportSection&pbi_source=appShareLink&portalSessionId=d839047e-96a4-488f-80a0-fed3a835fea9" target="_blank">
+                                IV020</a> z katalogu Stock Information</h5>
                             <p class="card-text">Pobierz aktualną listę i wczytaj ją powyżej. Pamiętaj o poprawnym
-                                generowaniu listy. Jeśli nie wiesz jak to zrobić kliknij <a
-                                        th:href="instruction">tutaj</a></p>
-                            <p class="card-text">Tej listy potrzebuję, aby uwzględnić rezerwacje tylko na najbliższe 1-2
-                                dni</p>
-                            <div class="alert alert-warning" role="alert">Uwaga! Istnieje również lista OPQ_CFB_PG,
-                                której niestety nie obsługuję
+                                generowaniu listy. Jeśli nie wiesz jak to zrobić
+                                <a th:href="instruction" target="_blank">sprwadź w instrukcji</a></p>
+                            <div class="alert alert-danger" role="alert">Uwaga! Przy generowaniu wybierz z filtrów po
+                                prawej stronie SALESMETHOD równe 1, oraz QTYRESERVEDINSTOCK większa niż 0,
                             </div>
+                            <p class="card-text">Tą listę potrzebuję, aby sprawdzić aktualne parametry artykułów na
+                                magazynie</p>
                             <p class="card-text"><small class="text-muted">Jak wrzucisz listę i klikniesz DALEJ,
                                 poczekaj cierpliwie aż to przetrawię</small></p>
                         </div>
+                    </div>
+                    <div class="col-md-3">
+                        <img th:src="@{/img/iv020_filtry.JPG}" class="img-fluid rounded-start" alt="...">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </section>
+
 </body>
 </html>

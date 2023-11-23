@@ -1,10 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/general :: layout(~{::title}, ~{::section})">
 <head>
     <meta charset="UTF-8">
     <title>Podsumowanie</title>
 </head>
 <body>
-  <h1>Congratulations! We did it!</h1>
+<section>
+    <h2>Podsumowanie</h2>
+    <div class="row center">
+        <div class="col-md-6">
+            <a th:href="generate-excel" class="btn btn-success btn-block my-2">
+                Excel file
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a th:href="generate-pdf" class="btn btn-danger btn-block my-2">
+                Pdf file
+            </a>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col" id="tabele">
+            <ul class="nav nav-tabs bg-white" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#to-prepare-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Do przygotowania</button>
+                </li>
+            </ul>
+
+            <!--tresc zakładek -->
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade active show" id="to-prepare-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <table id="table" class="p-1">
+                        <thead>
+                        <tr>
+                            <th>STRONA</th>
+                            <th>ART NR</th>
+                            <th>ART NAME</th>
+                            <th>SLID</th>
+                            <th>PQ</th>
+                            <th>STATUS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product: ${toPrepare}">
+                            <td th:text="${product.getMainLocation().getSpecshop().getShortName()}">P</td>
+                            <td th:text="${product.getId()}">1</td>
+                            <td th:text="${product.getName()}">Mark DSAD DASDSA GSDFDSFDSFDS FDSFDS FDSFSDFSDSFSDSDFSDSD DFSDFSD</td>
+                            <td th:text="${product.locationsToString()}">Otto</td>
+                            <td th:text="${product.getPalQty()}">@mdo</td>
+                            <td th:text="${product.getStatus().getOpis()}">@mdo</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div></div>
+        </div>
+    </div>
+</section>
 </body>
 </html>

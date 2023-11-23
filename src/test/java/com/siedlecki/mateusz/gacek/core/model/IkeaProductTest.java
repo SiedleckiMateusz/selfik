@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IkeaProductTest {
 
@@ -78,4 +78,19 @@ class IkeaProductTest {
         //then
         assertEquals(1,product.l23OrderToFullPal());
     }
+
+    @Test
+    @DisplayName("should return 16 pieces in l23 and prenot")
+    public void test5(){
+        IkeaProduct product = IkeaProduct.builder()
+                .prenotSales(8)
+                .palQty(8)
+                .assq(18)
+                .availableStock(30)
+                .sgf(30)
+                .build();
+        int result = product.l23AndPrenotOrderPalToQty();
+        assertEquals(16,result);
+    }
+
 }

@@ -1,65 +1,44 @@
 package com.siedlecki.mateusz.gacek.core;
 
-import com.siedlecki.mateusz.gacek.core.model.Column;
+import com.siedlecki.mateusz.gacek.core.model.IgnoredSlm003Value;
+import com.siedlecki.mateusz.gacek.core.model.Slm003Column;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class Constants {
-    public static String SLM0003_SHEET_NAME = "Sheet";
-    public static int SLM0003_ROW_INDEX = 0;
-    public static Set<Column> SLM0003_COLUMNS = new HashSet<>();
-    public static Set<Column> SLM0003_IGNORED_VALUES = new HashSet<>();
+    public static String SLM0003_SHEET_NAME = "Sheet1";
+    public static int SLM0003_ROW_INDEX = 2;
+    public static Set<IgnoredSlm003Value> SLM0003_IGNORED_VALUES = new HashSet<>();
+
+    public static String IV020_SHEET_NAME = "Sheet1";
+    public static int IV020_ROW_INDEX = 2;
 
     public static String PRENOT_SHEET_NAME = "SSFA";
     public static int PRENOT_ROW_INDEX = 1;
-    public static Set<Column> PRENOT_COLUMNS = new HashSet<>();
 
-    public static String OPQ_SHEET_NAME = "Sheet";
-    public static int OPQ_ROW_INDEX = 0;
-    public static Set<Column> OPQ_COLUMNS = new HashSet<>();
-
-    public static String FPS_SERVICE_PROVIDER = "32081";
     public static LocalTime CPS_CUT_OF_TIME = LocalTime.of(16,0);
 
     public static String[] EXCEL_COLUMNS_NAMES;
 
+    public static float[] COLUMNS_SIZE_FOR_TO_PREPARE_PDF = new float[]{9,5,6,9,39,33};
+    public static List<String> HEADERS_FOR_TO_PREPARE_PDF = Arrays.asList("NR","PQ","ORDER","STATUS","SLID","NAZWA");
+
+    public static float[] COLUMNS_SIZE_FOR_L23_PDF = new float[]{61,9,10,10,10};
+    public static List<String> HEADERS_FOR_L23_PDF = Arrays.asList("NAZWA","NR","L23[pal]","PRENOT[pal]","RAZEM [szt]");
+
     static {
-        SLM0003_COLUMNS.add(Column.builder().index(0).name("DIV").build());
-        SLM0003_COLUMNS.add(Column.builder().index(1).name("SPECSHOP_UNICODE").build());
-        SLM0003_COLUMNS.add(Column.builder().index(2).name("RANGEGROUP_UNICODE").build());
-        SLM0003_COLUMNS.add(Column.builder().index(5).name("ARTNO").build());
-        SLM0003_COLUMNS.add(Column.builder().index(6).name("ARTNAME_UNICODE").build());
-        SLM0003_COLUMNS.add(Column.builder().index(7).name("SLID").build());
-        SLM0003_COLUMNS.add(Column.builder().index(14).name("FCST").build());
-        SLM0003_COLUMNS.add(Column.builder().index(16).name("SSQ").build());
-        SLM0003_COLUMNS.add(Column.builder().index(42).name("AVGSALES").build());
-        SLM0003_COLUMNS.add(Column.builder().index(31).name("C_PALQ").build());
-        SLM0003_COLUMNS.add(Column.builder().index(43).name("AVAILSTOCK").build());
-        SLM0003_COLUMNS.add(Column.builder().index(44).name("QTYSGF").build());
-        SLM0003_COLUMNS.add(Column.builder().index(46).name("VOL").build());
 
-        SLM0003_IGNORED_VALUES.add(Column.builder().index(0).name("WH").build());
-        SLM0003_IGNORED_VALUES.add(Column.builder().index(0).name("MH").build());
-        SLM0003_IGNORED_VALUES.add(Column.builder().index(2).name("Activity area 4").build());
-        SLM0003_IGNORED_VALUES.add(Column.builder().index(1).name("Furniture").build());
-        SLM0003_IGNORED_VALUES.add(Column.builder().index(7).name("NoSLID").build());
-        SLM0003_IGNORED_VALUES.add(Column.builder().index(7).name("REC027").build());
-        SLM0003_IGNORED_VALUES.add(Column.builder().index(7).name("BIZNES").build());
-
-        PRENOT_COLUMNS.add(Column.builder().index(1).name("ART NO").build());
-        PRENOT_COLUMNS.add(Column.builder().index(14).name("TO").build());
-        PRENOT_COLUMNS.add(Column.builder().index(15).name("QTY").build());
-
-        OPQ_COLUMNS.add(Column.builder().index(2).name("ARTNO").build());
-        OPQ_COLUMNS.add(Column.builder().index(7).name("OPEN_PICK_QTY").build());
-        OPQ_COLUMNS.add(Column.builder().index(19).name("CUT_OFF_DATE").build());
-        OPQ_COLUMNS.add(Column.builder().index(20).name("CUT_OFF_TIME").build());
+        SLM0003_IGNORED_VALUES.add(IgnoredSlm003Value.builder().column(Slm003Column.DIV).value("WH").build());
+        SLM0003_IGNORED_VALUES.add(IgnoredSlm003Value.builder().column(Slm003Column.DIV).value("MH").build());
+        SLM0003_IGNORED_VALUES.add(IgnoredSlm003Value.builder().column(Slm003Column.RANGE_GROUP).value("Activity area 4").build());
+        SLM0003_IGNORED_VALUES.add(IgnoredSlm003Value.builder().column(Slm003Column.SPECSHOP).value("Furniture").build());
+        SLM0003_IGNORED_VALUES.add(IgnoredSlm003Value.builder().column(Slm003Column.SLID).value("NoSLID").build());
+        SLM0003_IGNORED_VALUES.add(IgnoredSlm003Value.builder().column(Slm003Column.SLID).value("REC027").build());
+        SLM0003_IGNORED_VALUES.add(IgnoredSlm003Value.builder().column(Slm003Column.SLID).value("BIZNES").build());
 
         EXCEL_COLUMNS_NAMES = new String[]{
                 "SPECSHOP",
@@ -78,5 +57,9 @@ public class Constants {
                 "L23 ORDER[PQ]",
                 "FREE SPACE AFTER ORDER"
         };
+    }
+
+    public static String convertNumber(double num){
+        return String.format("%.2f", num);
     }
 }

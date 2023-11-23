@@ -1,0 +1,26 @@
+h2{
+    color: whitesmoke;
+}
+table{
+    width: 100%;
+}
+table,tr,td {
+    background-color: rgba(240, 248, 255, 0.75);
+    color: black;
+    border-bottom: 1px solid black;
+    border-collapse: collapse;
+}
+th {
+    background-color: #323434;
+    color: white;
+}
+tr:hover {
+    background-color: rgba(154, 179, 211, 0.47);
+}
+.btn-block {
+    width: 100%;
+}
+
+#tabele{
+    background-color: rgba(217,222, 255, 0.64);
+}

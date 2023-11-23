@@ -1,8 +1,8 @@
 package com.siedlecki.mateusz.gacek.core.reader;
 
 
-import com.siedlecki.mateusz.gacek.core.model.Column;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,42 +13,49 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
-public class SheetReader {
+public abstract class SheetReader {
     private final String sheetName;
     private final int numOfColumnRow;
-    private final Set<Column> columnSet;
 
-    public Sheet getSheetFromFile(MultipartFile multipartFile) throws IOException {
+    public Sheet getCorrectSheetFromFile(MultipartFile multipartFile) throws IOException {
         Sheet sheet = createWorkbook(multipartFile).getSheet(sheetName);
-        if (sheet==null){
-            throw new IOException("Plik "+ multipartFile.getName() +" nie posiada arkusza o nazwie "+sheetName);
+        if (sheet == null) {
+            String message = "Plik " + multipartFile.getName() + " nie posiada arkusza o nazwie " + sheetName;
+            log.error(message);
+            throw new IOException(message);
         }
-        checkingColumn(sheet,columnSet,multipartFile.getName());
+        searchingColumn(sheet.getRow(numOfColumnRow));
         return sheet;
     }
 
-    private boolean checkingColumn(Sheet sheet, Set<Column> columnsInFileSet, String fileName) throws IOException {
-        Row row = sheet.getRow(numOfColumnRow);
-        for (Column c : columnsInFileSet){
-            if (!isCorrectColumn(row,c)){
-                throw new IOException("Niepoprawna kolumna: index "+c.getIndex()+", nazwa "+c.getName()+" w pliku "+fileName);
-            }
+    private void searchingColumn(Row row) {
+        log.info("Searching column");
+        Iterator<Cell> cellIterator = row.cellIterator();
+        do {
+            Cell next = cellIterator.next();
+            setIndex(next);
+        } while (cellIterator.hasNext());
+        List<String> emptyIndexColumnNames = getEmptyColumnNames();
+        if (!emptyIndexColumnNames.isEmpty()) {
+            String message = "Nie znaleziono wszystkich kolumn w podanym pliku. Brakujące kolumny" + emptyIndexColumnNames;
+            log.error(message);
+            throw new IllegalArgumentException(message);
         }
-        return true;
     }
 
-    private boolean isCorrectColumn(Row row, Column column){
-        Cell cell = row.getCell(column.getIndex(), Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
-        return cell != null && cell.getStringCellValue().trim().equals(column.getName().toUpperCase());
-    }
+    protected abstract void setIndex(Cell stringCell);
+
+    protected abstract List<String> getEmptyColumnNames();
 
     private Workbook createWorkbook(MultipartFile file) throws IOException {
-        try(InputStream inputStream = file.getInputStream()){
+        try (InputStream inputStream = file.getInputStream()) {
             String name = file.getOriginalFilename();
-            if (name!=null){
+            if (name != null) {
                 if (name.endsWith(".xlsx")) {
                     return new XSSFWorkbook(inputStream);
                 }
@@ -56,8 +63,11 @@ public class SheetReader {
                     return new HSSFWorkbook(inputStream);
                 }
             }
-            throw new IOException("Plik "+ name +" nie jest w formacie .xls lub .xlsx");
-        }catch (Exception e){
+            String message = "Plik " + name + " nie jest w formacie .xls lub .xlsx";
+            log.error(message);
+            throw new IOException(message);
+        } catch (Exception e) {
+            log.error(e.getMessage());
             throw new IOException(e.getMessage());
         }
     }

@@ -3,9 +3,6 @@
         <li th:class="'list-group-item '+ ${(flags!=null && flags.isSLM0003IsOkFlag())?'list-group-item-success':'list-group-item-light'}">
             SLM0003
         </li>
-        <li th:class="'list-group-item '+ ${(flags!=null && flags.isOpqIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
-            OPQ
-        </li>
 
         <li th:if="${flags!=null && flags.isPrenotProcessFlag()}"
             th:class="'list-group-item '+ ${(flags!=null && flags.isPrenotIsOkFlag())?'list-group-item-success':'list-group-item-light'}">
