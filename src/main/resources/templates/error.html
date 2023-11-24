@@ -8,6 +8,10 @@
 <section class="text-light">
     <h2>Ups...</h2>
     <p>Coś poszło nie po naszej myśli... Spróbuj ponownie wykonać ostatnią operację</p>
+    <h3>Błąd: </h3><p th:text="${errorMsg}">Treść błędu</p>
+    <h3>Stack trace: </h3><p th:each="line : ${errorStackTrace}">
+        <a th:text="${line}">linia</a><br>
+    </p>
 </section>
 
 </body>

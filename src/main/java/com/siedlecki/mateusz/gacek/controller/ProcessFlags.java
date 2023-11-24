@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProcessFlags {
+public class ProcessFlags extends MainController {
     private boolean SLM0003IsOkFlag;
     private boolean iv020IsOkFlag;
     private boolean prenotIsOkFlag;

@@ -32,7 +32,7 @@ import java.util.Optional;
 
 @Controller
 @SessionScope
-public class ProcessController {
+public class ProcessController extends MainController{
     private final ProductsContainer container = new ProductsContainer();
     private XlsxFileWriter fileWriter;
     private Result result;
