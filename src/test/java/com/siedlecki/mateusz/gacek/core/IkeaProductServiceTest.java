@@ -1,8 +1,9 @@
 package com.siedlecki.mateusz.gacek.core;
 
-import com.siedlecki.mateusz.gacek.core.model.IkeaProduct;
-import com.siedlecki.mateusz.gacek.core.model.Location;
-import com.siedlecki.mateusz.gacek.core.model.ProductStatus;
+import com.siedlecki.mateusz.gacek.IkeaProductService;
+import com.siedlecki.mateusz.gacek.model.IkeaProduct;
+import com.siedlecki.mateusz.gacek.model.Location;
+import com.siedlecki.mateusz.gacek.model.ProductStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
