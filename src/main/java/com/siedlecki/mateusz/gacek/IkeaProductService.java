@@ -3,10 +3,7 @@ package com.siedlecki.mateusz.gacek;
 import com.siedlecki.mateusz.gacek.model.*;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -108,18 +105,27 @@ public class IkeaProductService {
         for (IkeaProduct product : inPrenotProducts) {
             if (product.getLocations().size() > 1) {
                 if (isAnyZeroLevel(product.getLocations())) {
-                    product.setStatus(status);
-                    resultProducts.add(product);
+                    setStatusAndAddProductToList(status, resultProducts, product);
                 }
             } else {
                 double pallets = (double) product.getAssq() / product.getPalQty();
                 if (pallets >= 2) {
-                    product.setStatus(status);
-                    resultProducts.add(product);
+                    setStatusAndAddProductToList(status, resultProducts, product);
                 }
             }
         }
         return resultProducts;
+    }
+
+    private void setStatusAndAddProductToList(ProductStatus status, List<IkeaProduct> resultProducts, IkeaProduct product) {
+        if (Objects.isNull(product.getStatus())) {
+            product.setStatus(status);
+            resultProducts.add(product);
+        } else {
+            IkeaProduct copy = product.getCopy();
+            copy.setStatus(status);
+            resultProducts.add(copy);
+        }
     }
 
     private boolean isAnyZeroLevel(Set<Location> locations) {
